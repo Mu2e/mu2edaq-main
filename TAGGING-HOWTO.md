@@ -15,17 +15,48 @@ tags immediately.
 
 ## Tag naming convention
 
-Use [semantic versioning](https://semver.org/) prefixed with `v`:
+Use [semantic versioning](https://semver.org/) prefixed with a letter indicator and suffixed with a descriptive qualifier. 
+
+For the Mu2eDAQ system we use:
+
+| Prefix | Description |
+|---|---|
+| `p` | Production Release, this is intended to take physics data with |
+| `t` | Test Release, this is intended to test the real systems but no physics quality data is taken with it |
+| `d` | Development Release, this is intended only for internal development purposes, no data is taken with it |
+
+Suffixes can be looser but common ones are:
+| Suffix | Description |
+|---|---|
+|`rc`   | Release Candidate    |
+|`bad`  | Known major problem  |
+|`junk` | Not intended for use |
+|`<date>`| A date tag          |
+|`<epoch>` | A data epoch identifier |
+
+For version fields we use:
 
 ```
 v<major>.<minor>.<patch>
 ```
+With fields zero padded.
 
 | Increment | When |
 |---|---|
 | `major` | Incompatible API or configuration changes |
 | `minor` | New features, backwards-compatible |
 | `patch` | Bug fixes and minor corrections |
+
+So a full version tag may look like:
+```
+p01.12.02       # Production Tag
+p01.12.03-rc    # Release candidate of a Production Tag
+p01.14.06-Run1A # Production release that corresponds to Run 1A
+t01.11.04-bad   # A test release that had some major flaw
+d02.00.00       # A development or integration release
+```
+
+Some suffixes may be added (modified) latter based on testing (i.e. a release candidate may be promoted to a release, or a release may get marked bad)
 
 ## Step-by-step workflow
 

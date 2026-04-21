@@ -1,0 +1,39 @@
+[submodule "mu2edaq-bigredbox"]
+	path = mu2edaq-bigredbox
+	url = git@github.com:Mu2e/mu2edaq-bigredbox.git
+[submodule "mu2edaq-CFOControl"]
+	path = mu2edaq-CFOControl
+	url = git@github.com:Mu2e/mu2edaq-CFOControl.git
+[submodule "mu2edaq-cluster-tools"]
+	path = mu2edaq-cluster-tools
+	url = git@github.com:Mu2e/mu2edaq-cluster-tools.git
+[submodule "mu2edaq-controlcenter"]
+	path = mu2edaq-controlcenter
+	url = git@github.com:Mu2e/mu2edaq-controlcenter.git
+[submodule "mu2edaq-controlroom"]
+	path = mu2edaq-controlroom
+	url = git@github.com:Mu2e/mu2edaq-controlroom.git
+[submodule "mu2edaq-dashboard"]
+	path = mu2edaq-dashboard
+	url = git@github.com:Mu2e/mu2edaq-dashboard.git
+[submodule "mu2edaq-dataformat-viewer"]
+	path = mu2edaq-dataformat-viewer
+	url = git@github.com:Mu2e/mu2edaq-dataformat-viewer.git
+[submodule "mu2edaq-diskwatcher"]
+	path = mu2edaq-diskwatcher
+	url = git@github.com:Mu2e/mu2edaq-diskwatcher.git
+[submodule "mu2edaq-fts"]
+	path = mu2edaq-fts
+	url = git@github.com:Mu2e/mu2edaq-fts.git
+[submodule "mu2edaq-heartbeatmonitor"]
+	path = mu2edaq-heartbeatmonitor
+	url = git@github.com:Mu2e/mu2edaq-heartbeatmonitor.git
+[submodule "mu2edaq-operations"]
+	path = mu2edaq-operations
+	url = git@github.com:Mu2e/daq-operations.git
+[submodule "mu2edaq-resource-manager"]
+	path = mu2edaq-resource-manager
+	url = git@github.com:Mu2e/mu2edaq-resource-manager.git
+[submodule "mu2edaq-shifter-tools"]
+	path = mu2edaq-shifter-tools
+	url = git@github.com:Mu2e/mu2edaq-shifter-tools.git

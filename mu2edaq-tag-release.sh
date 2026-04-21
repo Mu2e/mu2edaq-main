@@ -5,9 +5,10 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") <tag> [-m <message>] [--dry-run] [--no-push]
        $(basename "$0") --rename <old-tag> <new-tag> [--dry-run] [--no-push]
+       $(basename "$0") --list [<pattern>]
 
 Create an annotated tag on mu2edaq-main and every submodule,
-or rename an existing tag across all repositories.
+rename an existing tag, or list tags across all repositories.
 
 Arguments:
   tag            Tag name to create (e.g. v1.2.3)
@@ -15,6 +16,7 @@ Arguments:
 Options:
   -m <message>   Tag annotation message (default: "Release <tag>")
   --rename       Rename old-tag to new-tag across all repositories
+  --list         List tags in every repository, optionally filtered by pattern
   --dry-run      Print what would be done without making any changes
   --no-push      Create/rename tags locally but do not push to remotes
   -h, --help     Show this help
@@ -25,15 +27,18 @@ EOF
 
 TAG=""
 OLD_TAG=""
+PATTERN=""
 MESSAGE=""
 DRY_RUN=false
 NO_PUSH=false
 RENAME=false
+LIST=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -m)        shift; MESSAGE="$1" ;;
     --rename)  RENAME=true ;;
+    --list)    LIST=true ;;
     --dry-run) DRY_RUN=true ;;
     --no-push) NO_PUSH=true ;;
     -h|--help) usage ;;
@@ -41,6 +46,8 @@ while [[ $# -gt 0 ]]; do
     *)
       if $RENAME && [[ -z "$OLD_TAG" ]]; then
         OLD_TAG="$1"
+      elif $LIST && [[ -z "$PATTERN" ]]; then
+        PATTERN="$1"
       elif [[ -z "$TAG" ]]; then
         TAG="$1"
       else
@@ -53,6 +60,8 @@ done
 
 if $RENAME; then
   [[ -z "$OLD_TAG" || -z "$TAG" ]] && { echo "Error: --rename requires <old-tag> and <new-tag>."; usage; }
+elif $LIST; then
+  : # pattern is optional
 else
   [[ -z "$TAG" ]] && { echo "Error: tag name required."; usage; }
   [[ -z "$MESSAGE" ]] && MESSAGE="Release $TAG"
@@ -117,7 +126,33 @@ rename_tag_repo() {
   fi
 }
 
-if $RENAME; then
+list_tags_repo() {
+  local path="$1"
+  local name="$2"
+  local tags
+  if [[ -n "$PATTERN" ]]; then
+    tags=$(git -C "$path" tag -l "$PATTERN")
+  else
+    tags=$(git -C "$path" tag -l)
+  fi
+  if [[ -z "$tags" ]]; then
+    echo "  $name: (no tags)"
+  else
+    while IFS= read -r t; do
+      local commit
+      commit=$(git -C "$path" rev-list -n1 "$t")
+      echo "  $name: $t  [${commit:0:7}]"
+    done <<< "$tags"
+  fi
+}
+
+if $LIST; then
+  [[ -n "$PATTERN" ]] && echo "==> Tags matching '$PATTERN'" || echo "==> All tags"
+  git submodule foreach --quiet 'echo $displaypath' | while read -r subpath; do
+    list_tags_repo "$REPO_ROOT/$subpath" "$subpath"
+  done
+  list_tags_repo "$REPO_ROOT" "mu2edaq-main"
+elif $RENAME; then
   echo "==> Renaming tag '$OLD_TAG' -> '$TAG' in submodules"
   git submodule foreach --quiet 'echo $displaypath' | while read -r subpath; do
     rename_tag_repo "$REPO_ROOT/$subpath" "$subpath"

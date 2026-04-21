@@ -1,6 +1,6 @@
 .TH MU2EDAQ\-TAG\-RELEASE 1 "2026-04-21" "Mu2e DAQ" "Mu2e DAQ Manual"
 .SH NAME
-mu2edaq\-tag\-release \- create an annotated release tag across mu2edaq\-main and all submodules
+mu2edaq\-tag\-release \- create, rename, or list release tags across mu2edaq\-main and all submodules
 .SH SYNOPSIS
 .B mu2edaq\-tag\-release.sh
 .I tag
@@ -8,25 +8,38 @@ mu2edaq\-tag\-release \- create an annotated release tag across mu2edaq\-main an
 .IR message ]
 .RB [ \-\-dry\-run ]
 .RB [ \-\-no\-push ]
+.br
+.B mu2edaq\-tag\-release.sh
+.B \-\-rename
+.I old\-tag new\-tag
+.RB [ \-\-dry\-run ]
+.RB [ \-\-no\-push ]
+.br
+.B mu2edaq\-tag\-release.sh
+.B \-\-list
+.RI [ pattern ]
+.RB [ \-\-json ]
 .SH DESCRIPTION
 .B mu2edaq\-tag\-release.sh
-creates an annotated git tag on every submodule of the
+manages release tags across every submodule of the
 .B mu2edaq\-main
-meta-repository and then on the parent repository itself.
+meta-repository and the parent repository itself.
+It supports three modes of operation: creating a new tag, renaming an existing
+tag, and listing tags.
+.PP
 Tags are pushed to each repository's
 .B origin
 remote unless
 .B \-\-no\-push
 is specified.
-.PP
 If a repository already carries the requested tag it is skipped without error,
-making the script safe to re-run after an interrupted release.
+making create and rename operations safe to re-run after an interruption.
 .SH ARGUMENTS
 .TP
 .I tag
 The tag name to create (e.g.\&
-.BR v1.2.3 ).
-Required.
+.BR p01.00.00 ).
+Required in the default (create) mode.
 .SH OPTIONS
 .TP
 .BI \-m " message"
@@ -34,66 +47,126 @@ Annotation message for the tag.
 Defaults to
 .RI \(lq Release\ <tag> \(rq
 when omitted.
+Only relevant in create mode.
+.TP
+.B \-\-rename
+Rename
+.I old\-tag
+to
+.I new\-tag
+across all repositories.
+The new tag is created at the same commit as the old tag and preserves the
+original annotation message.
+The old tag is then deleted locally and on
+.BR origin .
+.TP
+.B \-\-list
+List tags in every repository.
+Output can be filtered with an optional glob
+.IR pattern .
+Use
+.B \-\-json
+to format output as JSON.
+.TP
+.B \-\-json
+Format
+.B \-\-list
+output as a JSON object keyed by repository name.
+Each entry is an array of objects with fields
+.BR tag ,
+.BR commit
+(7-character short hash),
+.BR date ,
+and
+.BR message .
 .TP
 .B \-\-dry\-run
-Print every action that would be taken without creating or pushing any tags.
-Useful for verifying the target repositories and tag name before committing.
+Print every action that would be taken without creating, renaming, or pushing
+any tags.
 .TP
 .B \-\-no\-push
-Create tags locally in each repository but do not push them to
+Apply tag changes locally but do not push to
 .BR origin .
-After a
-.B \-\-no\-push
-run the script prints the commands needed to push manually.
+The script prints the commands needed to push manually when this flag is used.
 .TP
 .BR \-h ", " \-\-help
 Print a usage summary and exit.
 .SH EXAMPLES
-Tag all repositories as
-.B v1.0.0
-and push immediately:
+Create a tag and push immediately:
 .EX
-    ./mu2edaq\-tag\-release.sh v1.0.0
+    ./mu2edaq\-tag\-release.sh p01.00.00
 .EE
-Supply a custom annotation message:
+Create with a custom annotation message:
 .EX
-    ./mu2edaq\-tag\-release.sh v1.0.0 \-m "First production release"
+    ./mu2edaq\-tag\-release.sh p01.00.00 \-m "First production release"
 .EE
-Preview what would happen without making any changes:
+Preview a tagging operation without making changes:
 .EX
-    ./mu2edaq\-tag\-release.sh v1.0.0 \-\-dry\-run
+    ./mu2edaq\-tag\-release.sh p01.00.00 \-\-dry\-run
 .EE
-Create tags locally, then inspect before pushing:
+Create tags locally, inspect, then push manually:
 .EX
-    ./mu2edaq\-tag\-release.sh v1.0.0 \-\-no\-push
-    git submodule foreach 'git push origin v1.0.0'
-    git push origin v1.0.0
+    ./mu2edaq\-tag\-release.sh p01.00.00 \-\-no\-push
+    git submodule foreach 'git push origin p01.00.00'
+    git push origin p01.00.00
+.EE
+Rename a tag across all repositories:
+.EX
+    ./mu2edaq\-tag\-release.sh \-\-rename p01.00.00\-rc p01.00.00
+.EE
+Preview a rename without making changes:
+.EX
+    ./mu2edaq\-tag\-release.sh \-\-rename p01.00.00\-rc p01.00.00 \-\-dry\-run
+.EE
+List all tags in plain text:
+.EX
+    ./mu2edaq\-tag\-release.sh \-\-list
+.EE
+List tags matching a pattern:
+.EX
+    ./mu2edaq\-tag\-release.sh \-\-list 'p*'
+.EE
+List all tags as JSON:
+.EX
+    ./mu2edaq\-tag\-release.sh \-\-list \-\-json
+.EE
+List filtered tags as JSON, piped through a formatter:
+.EX
+    ./mu2edaq\-tag\-release.sh \-\-list 't*' \-\-json | python3 \-m json.tool
 .EE
 .SH BEHAVIOR
 .SS Tag ordering
-Submodules are tagged first, in the order returned by
+In create and rename modes, submodules are processed first in the order
+returned by
 .BR "git submodule foreach" .
 The parent repository
 .RB ( mu2edaq\-main )
-is tagged last so its tag always points to a commit that references already-tagged submodule states.
+is always last, so its tag points to a commit that already references
+the tagged submodule states.
 .SS Skipping existing tags
-If the requested tag already exists in a repository that repository is skipped
-and a
+If the target tag already exists in a repository during a create or rename
+operation, that repository is skipped and a
 .B SKIP
 message is printed.
-This allows a failed run to be retried without manually deleting partial tags.
+This allows a failed run to be retried without manually cleaning up partial
+results.
 .SS Annotated tags
-All tags created by this script are annotated (
-.B git tag \-a
-), which records the tagger identity, date, and message in the git object
-database.
-Lightweight tags are not used.
+All tags created or copied by this script are annotated
+.RB ( "git tag \-a" ),
+recording tagger identity, date, and message in the git object database.
+Lightweight tags are not created.
+.SS JSON output
+The
+.B \-\-json
+flag is only valid with
+.BR \-\-list .
+Output is a JSON object where each key is a repository name and each value is
+an array of tag objects.
+Repositories with no matching tags appear as empty arrays.
 .SH EXIT STATUS
 .TP
 .B 0
-All tags were created (and pushed, unless
-.B \-\-no\-push
-was given) successfully.
+The requested operation completed successfully.
 .TP
 .B non-zero
 A git operation failed.

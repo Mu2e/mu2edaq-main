@@ -1,0 +1,107 @@
+.TH MU2EDAQ\-BOOTSTRAP 1 "2026-04-21" "Mu2e DAQ" "Mu2e DAQ Manual"
+.SH NAME
+mu2edaq\-bootstrap \- manage the mu2edaq\-main git submodule repository
+.SH SYNOPSIS
+.B mu2edaq\-bootstrap.sh
+.I command
+.RI [ name ]
+.SH DESCRIPTION
+.B mu2edaq\-bootstrap.sh
+is a helper script for working with the
+.B mu2edaq\-main
+meta-repository, which aggregates the Mu2e DAQ software suite as a collection
+of git submodules.
+It wraps common submodule workflows into four simple commands.
+.SH COMMANDS
+.TP
+.B clone
+Clone
+.B mu2edaq\-main
+from GitHub together with all submodules in a single step.
+Equivalent to:
+.RS
+.EX
+git clone --recurse-submodules git@github.com:Mu2e/mu2edaq-main.git
+.EE
+.RE
+.TP
+.BI update " [name]"
+Fetch and merge the latest commits from the remote tracking branch of every
+submodule, or of the single submodule identified by
+.IR name .
+After this command the working tree of each submodule reflects the current
+state of its upstream
+.B main
+(or default) branch, but the parent repository's recorded pointers are not yet
+updated \(em run
+.B bump
+to commit them.
+.TP
+.BI bump " [name]"
+Stage the updated submodule pointer(s) in the parent repository and create a
+commit recording the new HEAD(s).
+If
+.I name
+is supplied only that submodule's pointer is staged; otherwise all changed
+pointers are staged.
+Prints a reminder to run
+.B git push
+afterwards.
+.TP
+.B status
+Print a one-line summary for each submodule showing its local HEAD commit,
+the corresponding remote HEAD, and whether it is up-to-date or behind/diverged.
+.SH EXAMPLES
+Clone the full suite onto a new machine:
+.EX
+    ./mu2edaq\-bootstrap.sh clone
+.EE
+Pull the latest code for all packages and record the update:
+.EX
+    ./mu2edaq\-bootstrap.sh update
+    ./mu2edaq\-bootstrap.sh bump
+    git push
+.EE
+Update and bump a single submodule:
+.EX
+    ./mu2edaq\-bootstrap.sh update mu2edaq-controlcenter
+    ./mu2edaq\-bootstrap.sh bump  mu2edaq-controlcenter
+    git push
+.EE
+Check which submodules are behind their remotes:
+.EX
+    ./mu2edaq\-bootstrap.sh status
+.EE
+.SH SUBMODULES
+The following repositories are registered as submodules:
+.PP
+.TS
+l l.
+mu2edaq-bigredbox	github.com/Mu2e/mu2edaq-bigredbox
+mu2edaq-CFOControl	github.com/Mu2e/mu2edaq-CFOControl
+mu2edaq-cluster-tools	github.com/Mu2e/mu2edaq-cluster-tools
+mu2edaq-controlcenter	github.com/Mu2e/mu2edaq-controlcenter
+mu2edaq-controlroom	github.com/Mu2e/mu2edaq-controlroom
+mu2edaq-dashboard	github.com/Mu2e/mu2edaq-dashboard
+mu2edaq-dataformat-viewer	github.com/Mu2e/mu2edaq-dataformat-viewer
+mu2edaq-diskwatcher	github.com/Mu2e/mu2edaq-diskwatcher
+mu2edaq-fts	github.com/Mu2e/mu2edaq-fts
+mu2edaq-heartbeatmonitor	github.com/Mu2e/mu2edaq-heartbeatmonitor
+mu2edaq-operations	github.com/Mu2e/daq-operations
+mu2edaq-resource-manager	github.com/Mu2e/mu2edaq-resource-manager
+mu2edaq-shifter-tools	github.com/Mu2e/mu2edaq-shifter-tools
+.TE
+.SH FILES
+.TP
+.B .gitmodules
+Submodule URL and path configuration, located at the root of the
+.B mu2edaq\-main
+repository.
+.SH SEE ALSO
+.BR git (1),
+.BR git\-submodule (1),
+.BR git\-clone (1)
+.SH REPOSITORY
+.UR https://github.com/Mu2e/mu2edaq-main
+https://github.com/Mu2e/mu2edaq-main
+.UE

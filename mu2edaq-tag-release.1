@@ -1,0 +1,117 @@
+.TH MU2EDAQ\-TAG\-RELEASE 1 "2026-04-21" "Mu2e DAQ" "Mu2e DAQ Manual"
+.SH NAME
+mu2edaq\-tag\-release \- create an annotated release tag across mu2edaq\-main and all submodules
+.SH SYNOPSIS
+.B mu2edaq\-tag\-release.sh
+.I tag
+.RB [ \-m
+.IR message ]
+.RB [ \-\-dry\-run ]
+.RB [ \-\-no\-push ]
+.SH DESCRIPTION
+.B mu2edaq\-tag\-release.sh
+creates an annotated git tag on every submodule of the
+.B mu2edaq\-main
+meta-repository and then on the parent repository itself.
+Tags are pushed to each repository's
+.B origin
+remote unless
+.B \-\-no\-push
+is specified.
+.PP
+If a repository already carries the requested tag it is skipped without error,
+making the script safe to re-run after an interrupted release.
+.SH ARGUMENTS
+.TP
+.I tag
+The tag name to create (e.g.\&
+.BR v1.2.3 ).
+Required.
+.SH OPTIONS
+.TP
+.BI \-m " message"
+Annotation message for the tag.
+Defaults to
+.RI \(lq Release\ <tag> \(rq
+when omitted.
+.TP
+.B \-\-dry\-run
+Print every action that would be taken without creating or pushing any tags.
+Useful for verifying the target repositories and tag name before committing.
+.TP
+.B \-\-no\-push
+Create tags locally in each repository but do not push them to
+.BR origin .
+After a
+.B \-\-no\-push
+run the script prints the commands needed to push manually.
+.TP
+.BR \-h ", " \-\-help
+Print a usage summary and exit.
+.SH EXAMPLES
+Tag all repositories as
+.B v1.0.0
+and push immediately:
+.EX
+    ./mu2edaq\-tag\-release.sh v1.0.0
+.EE
+Supply a custom annotation message:
+.EX
+    ./mu2edaq\-tag\-release.sh v1.0.0 \-m "First production release"
+.EE
+Preview what would happen without making any changes:
+.EX
+    ./mu2edaq\-tag\-release.sh v1.0.0 \-\-dry\-run
+.EE
+Create tags locally, then inspect before pushing:
+.EX
+    ./mu2edaq\-tag\-release.sh v1.0.0 \-\-no\-push
+    git submodule foreach 'git push origin v1.0.0'
+    git push origin v1.0.0
+.EE
+.SH BEHAVIOR
+.SS Tag ordering
+Submodules are tagged first, in the order returned by
+.BR "git submodule foreach" .
+The parent repository
+.RB ( mu2edaq\-main )
+is tagged last so its tag always points to a commit that references already-tagged submodule states.
+.SS Skipping existing tags
+If the requested tag already exists in a repository that repository is skipped
+and a
+.B SKIP
+message is printed.
+This allows a failed run to be retried without manually deleting partial tags.
+.SS Annotated tags
+All tags created by this script are annotated (
+.B git tag \-a
+), which records the tagger identity, date, and message in the git object
+database.
+Lightweight tags are not used.
+.SH EXIT STATUS
+.TP
+.B 0
+All tags were created (and pushed, unless
+.B \-\-no\-push
+was given) successfully.
+.TP
+.B non-zero
+A git operation failed.
+The script exits immediately on the first error due to
+.BR "set \-euo pipefail" .
+.SH FILES
+.TP
+.B .gitmodules
+Defines the submodule paths and remote URLs used by this script.
+Located at the root of the
+.B mu2edaq\-main
+repository.
+.SH SEE ALSO
+.BR mu2edaq\-bootstrap (1),
+.BR git (1),
+.BR git\-tag (1),
+.BR git\-submodule (1)
+.SH REPOSITORY
+.UR https://github.com/Mu2e/mu2edaq-main
+https://github.com/Mu2e/mu2edaq-main
+.UE

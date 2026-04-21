@@ -5,7 +5,7 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") <tag> [-m <message>] [--dry-run] [--no-push]
        $(basename "$0") --rename <old-tag> <new-tag> [--dry-run] [--no-push]
-       $(basename "$0") --list [<pattern>]
+       $(basename "$0") --list [<pattern>] [--json]
 
 Create an annotated tag on mu2edaq-main and every submodule,
 rename an existing tag, or list tags across all repositories.
@@ -17,6 +17,7 @@ Options:
   -m <message>   Tag annotation message (default: "Release <tag>")
   --rename       Rename old-tag to new-tag across all repositories
   --list         List tags in every repository, optionally filtered by pattern
+  --json         Output --list results as JSON
   --dry-run      Print what would be done without making any changes
   --no-push      Create/rename tags locally but do not push to remotes
   -h, --help     Show this help
@@ -33,12 +34,14 @@ DRY_RUN=false
 NO_PUSH=false
 RENAME=false
 LIST=false
+JSON=false
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -m)        shift; MESSAGE="$1" ;;
     --rename)  RENAME=true ;;
     --list)    LIST=true ;;
+    --json)    JSON=true ;;
     --dry-run) DRY_RUN=true ;;
     --no-push) NO_PUSH=true ;;
     -h|--help) usage ;;
@@ -126,32 +129,80 @@ rename_tag_repo() {
   fi
 }
 
-list_tags_repo() {
+collect_tags_repo() {
   local path="$1"
-  local name="$2"
   local tags
   if [[ -n "$PATTERN" ]]; then
     tags=$(git -C "$path" tag -l "$PATTERN")
   else
     tags=$(git -C "$path" tag -l)
   fi
-  if [[ -z "$tags" ]]; then
-    echo "  $name: (no tags)"
-  else
+  echo "$tags"
+}
+
+
+json_escape() {
+  local s="$1"
+  s="${s//\\/\\\\}"
+  s="${s//\"/\\\"}"
+  echo "$s"
+}
+
+list_repo() {
+  local path="$1"
+  local name="$2"
+  local tags
+  tags=$(collect_tags_repo "$path")
+
+  if $JSON; then
+    printf '  "%s": [' "$(json_escape "$name")"
+    local first_tag=true
     while IFS= read -r t; do
-      local commit
+      [[ -z "$t" ]] && continue
+      local commit date msg
       commit=$(git -C "$path" rev-list -n1 "$t")
-      echo "  $name: $t  [${commit:0:7}]"
+      date=$(git -C "$path" tag -l --format='%(creatordate:short)' "$t")
+      msg=$(git -C "$path" tag -l --format='%(contents:subject)' "$t")
+      $first_tag || printf ", "
+      first_tag=false
+      printf '{"tag":"%s","commit":"%s","date":"%s","message":"%s"}' \
+        "$(json_escape "$t")" "${commit:0:7}" "$(json_escape "$date")" "$(json_escape "$msg")"
     done <<< "$tags"
+    printf "]"
+  else
+    if [[ -z "$tags" ]]; then
+      echo "  $name: (no tags)"
+    else
+      while IFS= read -r t; do
+        [[ -z "$t" ]] && continue
+        local commit
+        commit=$(git -C "$path" rev-list -n1 "$t")
+        echo "  $name: $t  [${commit:0:7}]"
+      done <<< "$tags"
+    fi
   fi
 }
 
 if $LIST; then
-  [[ -n "$PATTERN" ]] && echo "==> Tags matching '$PATTERN'" || echo "==> All tags"
-  git submodule foreach --quiet 'echo $displaypath' | while read -r subpath; do
-    list_tags_repo "$REPO_ROOT/$subpath" "$subpath"
-  done
-  list_tags_repo "$REPO_ROOT" "mu2edaq-main"
+  if $JSON; then
+    echo "{"
+    first_repo=true
+    while IFS= read -r subpath; do
+      $first_repo || echo ","
+      first_repo=false
+      list_repo "$REPO_ROOT/$subpath" "$subpath"
+    done < <(git submodule foreach --quiet 'echo $displaypath')
+    $first_repo || echo ","
+    list_repo "$REPO_ROOT" "mu2edaq-main"
+    echo ""
+    echo "}"
+  else
+    [[ -n "$PATTERN" ]] && echo "==> Tags matching '$PATTERN'" || echo "==> All tags"
+    while IFS= read -r subpath; do
+      list_repo "$REPO_ROOT/$subpath" "$subpath"
+    done < <(git submodule foreach --quiet 'echo $displaypath')
+    list_repo "$REPO_ROOT" "mu2edaq-main"
+  fi
 elif $RENAME; then
   echo "==> Renaming tag '$OLD_TAG' -> '$TAG' in submodules"
   git submodule foreach --quiet 'echo $displaypath' | while read -r subpath; do

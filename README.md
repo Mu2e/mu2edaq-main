@@ -20,6 +20,7 @@ Top-level meta-repository for the Mu2e DAQ software suite. Each subdirectory is 
 | mu2edaq-controlroom-setup | [Mu2e/mu2edaq-controlroom-setup](https://github.com/Mu2e/mu2edaq-controlroom-setup) |
 | mu2edaq-dashboard | [Mu2e/mu2edaq-dashboard](https://github.com/Mu2e/mu2edaq-dashboard) |
 | mu2edaq-dataformat-viewer | [Mu2e/mu2edaq-dataformat-viewer](https://github.com/Mu2e/mu2edaq-dataformat-viewer) |
+| mu2edaq-discovery | [Mu2e/mu2edaq-discovery](https://github.com/Mu2e/mu2edaq-discovery) |
 | mu2edaq-diskwatcher | [Mu2e/mu2edaq-diskwatcher](https://github.com/Mu2e/mu2edaq-diskwatcher) |
 | mu2edaq-downtime-logger | [Mu2e/mu2edaq-downtime-logger](https://github.com/Mu2e/mu2edaq-downtime-logger) |
 | mu2edaq-fts | [Mu2e/mu2edaq-fts](https://github.com/Mu2e/mu2edaq-fts) |

@@ -97,3 +97,6 @@
 [submodule "otsdaq-mu2e-trigger"]
 	path = otsdaq-mu2e-trigger
 	url = git@github.com:Mu2e/otsdaq-mu2e-trigger.git
+[submodule "mu2edaq-controlroom-setup"]
+	path = mu2edaq-controlroom-setup
+	url = git@github.com:Mu2e/mu2edaq-controlroom-setup.git

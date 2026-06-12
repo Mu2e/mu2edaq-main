@@ -37,3 +37,63 @@
 [submodule "mu2edaq-shifter-tools"]
 	path = mu2edaq-shifter-tools
 	url = git@github.com:Mu2e/mu2edaq-shifter-tools.git
+[submodule "artdaq-core-mu2e"]
+	path = artdaq-core-mu2e
+	url = git@github.com:normanajn/artdaq-core-mu2e.git
+[submodule "artdaq-mu2e"]
+	path = artdaq-mu2e
+	url = git@github.com:Mu2e/artdaq-mu2e.git
+[submodule "Bootstrap"]
+	path = Bootstrap
+	url = git@github.com:Mu2e/Bootstrap.git
+[submodule "mu2e-pcie-utils"]
+	path = mu2e-pcie-utils
+	url = git@github.com:Mu2e/mu2e-pcie-utils.git
+[submodule "mu2e-tdaq-suite"]
+	path = mu2e-tdaq-suite
+	url = git@github.com:Mu2e/mu2e-tdaq-suite.git
+[submodule "mu2ebintools"]
+	path = mu2ebintools
+	url = git@github.com:Mu2e/mu2ebintools.git
+[submodule "mu2edaq-downtime-logger"]
+	path = mu2edaq-downtime-logger
+	url = git@github.com:Mu2e/mu2edaq-downtime-logger.git
+[submodule "mu2edaq-kpp-scripts"]
+	path = mu2edaq-kpp-scripts
+	url = git@github.com:Mu2e/mu2edaq-kpp-scripts.git
+[submodule "mu2edaq-runlog-db"]
+	path = mu2edaq-runlog-db
+	url = git@github.com:Mu2e/mu2edaq-runlog-db.git
+[submodule "mu2edaq-trigger-scalers"]
+	path = mu2edaq-trigger-scalers
+	url = git@github.com:Mu2e/mu2edaq-trigger-scalers.git
+[submodule "otsdaq-mu2e"]
+	path = otsdaq-mu2e
+	url = git@github.com:Mu2e/otsdaq-mu2e.git
+[submodule "otsdaq-mu2e-calorimeter"]
+	path = otsdaq-mu2e-calorimeter
+	url = git@github.com:Mu2e/otsdaq-mu2e-calorimeter.git
+[submodule "otsdaq-mu2e-config"]
+	path = otsdaq-mu2e-config
+	url = git@github.com:Mu2e/otsdaq-mu2e-config.git
+[submodule "otsdaq-mu2e-crv"]
+	path = otsdaq-mu2e-crv
+	url = git@github.com:Mu2e/otsdaq-mu2e-crv.git
+[submodule "otsdaq-mu2e-dqm"]
+	path = otsdaq-mu2e-dqm
+	url = git@github.com:Mu2e/otsdaq-mu2e-dqm.git
+[submodule "otsdaq-mu2e-extmon"]
+	path = otsdaq-mu2e-extmon
+	url = git@github.com:Mu2e/otsdaq-mu2e-extmon.git
+[submodule "otsdaq-mu2e-stm"]
+	path = otsdaq-mu2e-stm
+	url = git@github.com:Mu2e/otsdaq-mu2e-stm.git
+[submodule "otsdaq-mu2e-sync"]
+	path = otsdaq-mu2e-sync
+	url = git@github.com:Mu2e/otsdaq-mu2e-sync.git
+[submodule "otsdaq-mu2e-tracker"]
+	path = otsdaq-mu2e-tracker
+	url = git@github.com:Mu2e/otsdaq-mu2e-tracker.git
+[submodule "otsdaq-mu2e-trigger"]
+	path = otsdaq-mu2e-trigger
+	url = git@github.com:Mu2e/otsdaq-mu2e-trigger.git

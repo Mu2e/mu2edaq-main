@@ -1,0 +1,6 @@
+# compatibility-test artifacts (venvs, cmake builds, logs, reports)
+.compat/
+__pycache__/
+*.pyc
+issue-drafts/
+.claude/

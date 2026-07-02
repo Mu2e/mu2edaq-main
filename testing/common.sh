@@ -64,10 +64,16 @@ pkg_editable_spec() {
 }
 
 # Sibling packages (paths relative to $ROOT) pip-installed into this
-# package's venv before the package itself.
+# package's venv before the package itself. mu2edaq-discovery is not on
+# PyPI; packages that list it in requirements.txt/pyproject get it from
+# the sibling checkout.
 pkg_sibling_deps() {
   case "$1" in
     mu2edaq-controlroom-setup) echo "mu2edaq-discovery" ;;
+    mu2edaq-dataformat-viewer) echo "mu2edaq-discovery" ;;
+    mu2edaq-downtime-logger)   echo "mu2edaq-discovery" ;;
+    mu2edaq-heartbeatmonitor)  echo "mu2edaq-discovery" ;;
+    mu2edaq-resource-manager)  echo "mu2edaq-discovery" ;;
     *) echo "" ;;
   esac
 }

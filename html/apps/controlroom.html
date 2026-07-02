@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Room Utilities — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html">Applications</a><a href="../tools.html" class="active">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../tools.html">Tools</a> › Control Room Utilities</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Kerberos, VNC-tunnel and environment scripts</div>
+<h1>Control Room Utilities</h1>
+<p class="lede">Grab-bag of control-room support tools: Kerberos ticket lifecycle, VNC tunnels, GitHub organisation helpers, and DAQ environment capture/restore.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install dependencies (for the Kerberos tools)</strong><p>The krb5 Python package compiles against krb5-devel (present on the DAQ hosts).</p><pre><code><span class="p">$</span> cd mu2edaq-controlroom
+<span class="p">$</span> python3 -m venv venv &amp;&amp; venv/bin/pip install -r requirements.txt</code></pre></li><li><strong>Kerberos tickets</strong><pre><code><span class="p">$</span> venv/bin/python kerb.py                 # show active principal + caches
+<span class="p">$</span> venv/bin/python ticket-manage.py        # Qt6 GUI ticket manager
+<span class="p">$</span> bin/GetTicket.sh                        # TGT from keytab (macOS/Linux aware)
+<span class="c"># headless renewal from cron:</span>
+<span class="p">$</span> venv/bin/python mu2e-krb-cron.py</code></pre></li><li><strong>VNC tunnels (requires a valid ticket)</strong><pre><code><span class="p">$</span> bin/start_vnc_tunnels_mu2e.sh open
+<span class="p">$</span> bin/start_vnc_tunnels_mu2e.sh close</code></pre></li><li><strong>Environment capture / restore</strong><pre><code><span class="p">$</span> ./daq_env_tools.py -c -o snapshot.json   # capture
+<span class="p">$</span> ./daq_env_tools.py -r -i snapshot.json   # restore</code></pre></li></ol>
+<h2>Notes</h2><div class="note">The <code>Mu2eCR/</code> tree is NOvA-era legacy under review (<a href='https://github.com/Mu2e/mu2edaq-controlroom/issues/3'>controlroom#3</a>).</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-controlroom">mu2edaq-controlroom</a></dd><dt>Type</dt><dd>Kerberos, VNC-tunnel and environment scripts</dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

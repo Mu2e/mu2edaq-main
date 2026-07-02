@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Overview — mu2edaq runbook</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="index.html" class="active">Overview</a><a href="setup.html">Common setup</a><a href="services.html">Applications</a><a href="tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="eyebrow">Mu2e DAQ · operations</div>
+<h1>Starting the DAQ applications</h1>
+<p class="lede">Step-by-step start, verify and stop procedures for every application in the
+<a href="https://github.com/Mu2e/mu2edaq-main">mu2edaq-main</a> suite, as deployed on the
+AlmaLinux&nbsp;9 production cluster. Ports and session placement come from
+<code>apps.yaml</code>, the suite's single source of port truth.</p>
+
+<h2>Control-room applications</h2>
+<p>Started on their VNC session by desktop icon or <code>crs-app start &lt;id&gt;</code>; each has a standardized
+<code>start-*/stop-*</code> script pair and can also be run by hand.</p>
+<div class="grid"><a class="card" href="apps/controlcenter.html"><div class="name">DAQ Control Center</div><div class="desc">PyQt6 GUI + status server</div><div class="meta">cmd 9876</div></a><a class="card" href="apps/dashboard.html"><div class="name">DAQ Message Dashboard</div><div class="desc">Flask + Socket.IO web app, ZeroMQ receiver</div><div class="meta">http 5001 · zmq 5555</div></a><a class="card" href="apps/bigredbox.html"><div class="name">Big Red Box Alerts</div><div class="desc">PyQt5 fullscreen alert listener</div><div class="meta">udp 37020</div></a><a class="card" href="apps/downtime-logger.html"><div class="name">Downtime Logger</div><div class="desc">PySide6 GUI + pluggable detectors + web status</div><div class="meta">http 8088</div></a><a class="card" href="apps/diskwatcher.html"><div class="name">Disk Watcher</div><div class="desc">Flask web service</div><div class="meta">http 5002</div></a><a class="card" href="apps/fts.html"><div class="name">File Transfer Service</div><div class="desc">Flask web service + transfer daemon</div><div class="meta">http 5003</div></a><a class="card" href="apps/heartbeatmonitor.html"><div class="name">Heartbeat Monitor</div><div class="desc">Flask web app + UDP listener</div><div class="meta">http 8081 · udp 9999</div></a><a class="card" href="apps/resource-manager.html"><div class="name">Resource Manager</div><div class="desc">FastAPI server + C++/CLI clients</div><div class="meta">http 8080</div></a><a class="card" href="apps/runlog-db.html"><div class="name">Run Log Database</div><div class="desc">Django + gunicorn viewer over Postgres</div><div class="meta">http 8000</div></a><a class="card" href="apps/trigger-scalers.html"><div class="name">Trigger Scalers</div><div class="desc">C++ Qt display (Qt5 or Qt6)</div><div class="meta">udp 5557 · zmq 5556</div></a><a class="card" href="apps/dataformat-viewer.html"><div class="name">Data Format Viewer</div><div class="desc">PyQt6 viewer + sender pair</div><div class="meta">listen 7755</div></a><a class="card" href="apps/cfocontrol.html"><div class="name">CFO Control</div><div class="desc">Terminal CLI (stdlib Python)</div><div class="meta">macromaker 5000</div></a></div>
+
+<h2>Client &amp; operations tools</h2>
+<p>Run on demand from your machine or a DAQ host — no resident process.</p>
+<div class="grid"><a class="card" href="apps/controlroom-setup.html"><div class="name">Control Room Setup (crs-*)</div><div class="desc">Client package: crs-tunnel, crs-remote, crs-gui, crs-app</div><div class="meta"></div></a><a class="card" href="apps/discovery.html"><div class="name">Service Discovery</div><div class="desc">stdlib-only library + CLI</div><div class="meta">multicast 28999</div></a><a class="card" href="apps/cluster-tools.html"><div class="name">Cluster Tools (ssh-selector)</div><div class="desc">Textual TUI</div><div class="meta"></div></a><a class="card" href="apps/controlroom.html"><div class="name">Control Room Utilities</div><div class="desc">Kerberos, VNC-tunnel and environment scripts</div><div class="meta"></div></a><a class="card" href="apps/operations.html"><div class="name">Operations Scripts</div><div class="desc">Node inventory and health scripts</div><div class="meta"></div></a><a class="card" href="apps/shifter-tools.html"><div class="name">Shifter Tools</div><div class="desc">Shift-operations scripts</div><div class="meta"></div></a><a class="card" href="apps/kpp-scripts.html"><div class="name">KPP Scripts</div><div class="desc">Production fcl configurations</div><div class="meta"></div></a></div>
+
+<h2>First time here?</h2>
+<p>Read <a href="setup.html">Common setup</a> first: one clone of the superproject gives you every
+application in a consistent layout, plus the harness that verifies the whole suite builds and runs.</p>
+
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

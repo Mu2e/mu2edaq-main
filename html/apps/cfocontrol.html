@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CFO Control — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › CFO Control</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Terminal CLI (stdlib Python)</div>
+<h1>CFO Control</h1>
+<p class="lede">Command-line control of the CFO via the MacroMaker UDP interface — runs in a terminal, no virtual environment needed.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Run</strong><p>Pure-stdlib Python 3; point it at the MacroMaker host (UDP port 5000 per apps.yaml).</p><pre><code><span class="p">$</span> cd mu2edaq-CFOControl
+<span class="p">$</span> python3 CFOControl.py --host &lt;macromaker-host&gt; --port 5000
+<span class="p">$</span> python3 CFOControl.py --config my_cfo.yaml</code></pre></li><li><strong>Stop</strong><pre><code><span class="c"># interactive - exit the CLI (Ctrl-D / quit)</span></code></pre></li></ol>
+
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-CFOControl">mu2edaq-CFOControl</a></dd><dt>Type</dt><dd>Terminal CLI (stdlib Python)</dd><dt>Ports</dt><dd><span class="chip">macromaker 5000</span></dd><dt>Session</dt><dd>daq-aux</dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

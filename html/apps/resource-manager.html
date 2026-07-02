@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resource Manager — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › Resource Manager</div>
+<div class="detail">
+<div>
+<div class="eyebrow">FastAPI server + C++/CLI clients</div>
+<h1>Resource Manager</h1>
+<p class="lede">Central allocator for shared DAQ resources; FastAPI server with a web view, a Python CLI, and a C++ client library.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install server dependencies (first time only)</strong><p>fastapi / uvicorn / pyyaml / requests into a venv. Inside mu2edaq-main also install the discovery sibling.</p><pre><code><span class="p">$</span> cd mu2edaq-resource-manager
+<span class="p">$</span> python3 -m venv venv
+<span class="p">$</span> venv/bin/pip install ../mu2edaq-discovery -r requirements.txt</code></pre></li><li><strong>Start the server</strong><p>Daemon mode; port precedence CRS_PORT_HTTP > RM_PORT > 8080. Extra args go to scripts/start_server.sh.</p><pre><code><span class="p">$</span> ./start-mu2edaq-resource-manager.sh
+<span class="c"># or: crs-app start resource-manager</span></code></pre></li><li><strong>Verify</strong><pre><code><span class="p">$</span> curl -s http://localhost:8080/ | head</code></pre></li><li><strong>Optional: build the C++ client library</strong><pre><code><span class="p">$</span> cmake -S . -B build &amp;&amp; cmake --build build -j</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-resource-manager.sh
+<span class="c"># or: crs-app stop resource-manager</span></code></pre></li></ol>
+<h2>Notes</h2><div class="note">Configuration lives in <code>config/</code>; copy <code>example.env</code> to <code>.env</code> to override defaults.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-resource-manager">mu2edaq-resource-manager</a></dd><dt>Type</dt><dd>FastAPI server + C++/CLI clients</dd><dt>Ports</dt><dd><span class="chip">http 8080</span></dd><dt>Session</dt><dd>daq-main</dd><dt>Launcher</dt><dd><code>crs-app start resource-manager</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

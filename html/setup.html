@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Common setup — mu2edaq runbook</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="index.html">Overview</a><a href="setup.html" class="active">Common setup</a><a href="services.html">Applications</a><a href="tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="index.html">Overview</a> › Common setup</div>
+<h1>Common setup</h1>
+<p class="lede">Everything below assumes the mu2edaq-main superproject layout — one checkout containing
+every application as a git submodule, at <code>~/mu2edaq-main</code> on the DAQ hosts.</p>
+
+<h2>1 · Get the code</h2>
+<pre><code><span class="p">$</span> git clone --recurse-submodules git@github.com:Mu2e/mu2edaq-main.git
+<span class="p">$</span> cd mu2edaq-main
+<span class="c"># already cloned without submodules?</span>
+<span class="p">$</span> git submodule update --init --recursive</code></pre>
+<h2>2 · Platform baseline</h2>
+<p>The production platform is <b>AlmaLinux 9</b> with the system <b>Python 3.9</b>; every package in the suite
+is verified against it (macOS also works for development). GUI apps need a display — inside the control room
+that is the app's assigned VNC session.</p>
+
+<h2>3 · The bootstrap pattern</h2>
+<p>Every Python application keeps its own virtual environment in <code>./venv</code>, created by the package's
+bootstrap script (<code>bootstrap*.sh</code>). Bootstrap once per checkout, re-run after dependency changes:</p>
+<pre><code><span class="p">$</span> cd mu2edaq-&lt;app&gt;
+<span class="p">$</span> ./bootstrap*.sh</code></pre>
+<div class="warn">Four packages (downtime-logger, dataformat-viewer, heartbeatmonitor, resource-manager)
+also depend on <code>mu2edaq-discovery</code>, which is not on PyPI — install the sibling checkout into their
+venv first: <code>venv/bin/pip install ../mu2edaq-discovery</code>
+(<a href="https://github.com/Mu2e/mu2edaq-main/issues/4">mu2edaq-main#4</a>).</div>
+
+<h2>4 · The crs-app launcher and ports</h2>
+<p>Desktop icons and shift procedures start applications with <code>crs-app start &lt;id&gt;</code>
+(from <a href="apps/controlroom-setup.html">mu2edaq-controlroom-setup</a>). The launcher reads
+<code>config/apps.yaml</code>, exports <code>CRS_PORT_&lt;NAME&gt;</code> for each of the app's ports, and execs the
+app's standardized start script. Started by hand, the same scripts fall back to identical built-in defaults —
+see the <a href="services.html#ports">port map</a>.</p>
+
+<h2>5 · Verify the whole suite</h2>
+<p>The superproject ships a compatibility harness that builds and smoke-tests every package:</p>
+<pre><code><span class="p">$</span> ./mu2edaq-build-all.sh            # venvs, editable installs, CMake builds
+<span class="p">$</span> ./mu2edaq-test-all.sh             # imports, CLI smokes, pytest, ctest -&gt; .compat/report.md
+<span class="p">$</span> source mu2edaq-setup-env.sh &lt;pkg&gt; # work inside one package's environment</code></pre>
+
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

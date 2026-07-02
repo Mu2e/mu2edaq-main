@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Room Setup (crs-*) — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html">Applications</a><a href="../tools.html" class="active">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../tools.html">Tools</a> › Control Room Setup (crs-*)</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Client package: crs-tunnel, crs-remote, crs-gui, crs-app</div>
+<h1>Control Room Setup (crs-*)</h1>
+<p class="lede">Provision and operate the control-room VNC sessions and SSH tunnels from your own machine, through the FNAL gateway. Also owns apps.yaml — the single source of port truth.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install on your client machine (first time only)</strong><pre><code><span class="p">$</span> cd mu2edaq-controlroom-setup
+<span class="p">$</span> ./bootstrap.sh          # venv + editable install with GUI extras</code></pre></li><li><strong>First-time host setup</strong><p>Ships scripts/configs to every (host, account) pair and generates desktop icons.</p><pre><code><span class="p">$</span> venv/bin/crs-remote install --all
+<span class="p">$</span> venv/bin/crs-remote provision --all</code></pre></li><li><strong>Daily operation</strong><p>Start everything, connect a session viewer, or drive it from the GUI:</p><pre><code><span class="p">$</span> bin/start-controlroom.sh                       # all sessions + all tunnels
+<span class="p">$</span> venv/bin/crs-tunnel connect --session daq-main # one VNC viewer
+<span class="p">$</span> venv/bin/crs-gui                               # PyQt6 control panel
+<span class="p">$</span> bin/stop-controlroom.sh                        # tear it all down</code></pre></li><li><strong>Piecemeal control</strong><pre><code><span class="p">$</span> venv/bin/crs-remote {start|stop|status} --session NAME|--host H|--all
+<span class="p">$</span> venv/bin/crs-tunnel {open|close|status|connect} --session NAME|--all</code></pre></li></ol>
+<h2>Notes</h2><div class="note">Sessions (from <code>config/controlroom.yaml</code>): shift-main, shift-aux, daq-main, daq-aux, daq-dl2 … Desktop icons run <code>crs-app start &lt;id&gt;</code>, which exports <code>CRS_PORT_&lt;NAME&gt;</code> from apps.yaml and execs the app's standardized start script.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-controlroom-setup">mu2edaq-controlroom-setup</a></dd><dt>Type</dt><dd>Client package: crs-tunnel, crs-remote, crs-gui, crs-app</dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

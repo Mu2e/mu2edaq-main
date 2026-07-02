@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>File Transfer Service — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › File Transfer Service</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Flask web service + transfer daemon</div>
+<h1>File Transfer Service</h1>
+<p class="lede">Moves completed data files off the DAQ hosts (paramiko/scp), with a web control page and optional SAML single sign-on.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><p>Installs flask, paramiko, scp, python3-saml and friends. On AL9 the SAML stack installs from binary wheels — no system -devel packages needed.</p><pre><code><span class="p">$</span> cd mu2edaq-fts
+<span class="p">$</span> ./bootstrap_fts.sh</code></pre></li><li><strong>Start the service</strong><p>Daemonizes mu2edaq_fts.py with config/test_config.yaml; the daemon writes config/test_config.pid. Web port from CRS_PORT_HTTP (default 5003), overriding web_server.port in the config.</p><pre><code><span class="p">$</span> ./start_fts.sh
+<span class="p">$</span> ./start_fts.sh config/my_config.yaml     # alternate config
+<span class="c"># or: crs-app start fts</span></code></pre></li><li><strong>Verify</strong><pre><code><span class="p">$</span> curl -s http://localhost:5003/ | head
+<span class="p">$</span> venv/bin/python -m pytest tests -q</code></pre></li><li><strong>Stop</strong><p>Pass the pid file if you started with a non-default config.</p><pre><code><span class="p">$</span> ./stop_fts.sh
+<span class="p">$</span> ./stop_fts.sh config/my_config.pid
+<span class="c"># or: crs-app stop fts</span></code></pre></li></ol>
+<h2>Notes</h2><div class="warn">If the checkout contains a committed <code>venv/</code> directory, delete it and re-run the bootstrap — it holds macOS Python 3.12 binaries that cannot work on AL9 (<a href='https://github.com/Mu2e/mu2edaq-fts/issues/7'>fts#7</a>).</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-fts">mu2edaq-fts</a></dd><dt>Type</dt><dd>Flask web service + transfer daemon</dd><dt>Ports</dt><dd><span class="chip">http 5003</span></dd><dt>Session</dt><dd>daq-main, daq-dl2</dd><dt>Launcher</dt><dd><code>crs-app start fts</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

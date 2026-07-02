@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big Red Box Alerts — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › Big Red Box Alerts</div>
+<div class="detail">
+<div>
+<div class="eyebrow">PyQt5 fullscreen alert listener</div>
+<h1>Big Red Box Alerts</h1>
+<p class="lede">Listens for UDP broadcast alerts and throws a full-screen red alert window at the shifter when one arrives.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install dependencies (first time only)</strong><p>PyQt5 ≥ 5.15 into a venv (or the session's shared environment).</p><pre><code><span class="p">$</span> cd mu2edaq-bigredbox
+<span class="p">$</span> python3 -m venv venv &amp;&amp; venv/bin/pip install -r requirements.txt</code></pre></li><li><strong>Start the alert listener</strong><p>Backgrounds daq_alert.py; UDP port from CRS_PORT_UDP (default 37020). Writes /tmp/daq_alert.pid and logs to /tmp/daq_alert.log. DISPLAY must point at the shifter screen.</p><pre><code><span class="p">$</span> ./start_daq_alert.sh
+<span class="c"># or: crs-app start bigredbox</span></code></pre></li><li><strong>Verify</strong><p>Fire a demo alert from any machine on the subnet:</p><pre><code><span class="p">$</span> venv/bin/python demo_sender.py</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop_daq_alert.sh
+<span class="c"># or: crs-app stop bigredbox</span></code></pre></li></ol>
+<h2>Notes</h2><div class="note">This is the only PyQt5 app in the suite (everything else is PyQt6/PySide6) — see <a href='https://github.com/Mu2e/mu2edaq-main/issues/2'>mu2edaq-main#2</a>.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-bigredbox">mu2edaq-bigredbox</a></dd><dt>Type</dt><dd>PyQt5 fullscreen alert listener</dd><dt>Ports</dt><dd><span class="chip">udp 37020</span></dd><dt>Session</dt><dd>shift-main, shift-aux</dd><dt>Launcher</dt><dd><code>crs-app start bigredbox</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

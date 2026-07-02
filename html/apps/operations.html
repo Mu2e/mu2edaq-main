@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Operations Scripts — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html">Applications</a><a href="../tools.html" class="active">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../tools.html">Tools</a> › Operations Scripts</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Node inventory and health scripts</div>
+<h1>Operations Scripts</h1>
+<p class="lede">Day-to-day cluster operations: node inventory, temperature readout, IPMI, server health checks, and PCIe card setup.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install Python dependencies (first time only)</strong><pre><code><span class="p">$</span> cd mu2edaq-operations
+<span class="p">$</span> python3 -m venv venv &amp;&amp; venv/bin/pip install -r requirements.txt</code></pre></li><li><strong>Node inventory</strong><pre><code><span class="p">$</span> venv/bin/python node_list.py --help     # list nodes from YAML inventory
+<span class="p">$</span> venv/bin/python node_edit.py            # interactive inventory editor
+<span class="p">$</span> venv/bin/python mu2e_node_lookup.py &lt;node&gt;</code></pre></li><li><strong>Health and hardware</strong><pre><code><span class="p">$</span> ./read_node_temps.sh        # CPU temperatures across nodes
+<span class="p">$</span> ./read_dtc_temps.sh         # DTC card temperatures
+<span class="p">$</span> ./mu2e_ipmi.sh &lt;node&gt; ...   # IPMI wrapper
+<span class="p">$</span> ./server_checks.sh          # health sweep (pssh variant available)</code></pre></li><li><strong>PCIe / driver setup on AL9</strong><pre><code><span class="p">$</span> ./setup_pcie_AL9.sh
+<span class="p">$</span> ./check_update_pcie_version.sh</code></pre></li></ol>
+
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/daq-operations">mu2edaq-operations</a></dd><dt>Type</dt><dd>Node inventory and health scripts</dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

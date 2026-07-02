@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications — mu2edaq runbook</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="index.html">Overview</a><a href="setup.html">Common setup</a><a href="services.html" class="active">Applications</a><a href="tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="index.html">Overview</a> › Applications</div>
+<h1>Control-room applications</h1>
+<p class="lede">The twelve applications in <code>apps.yaml</code>. Each detail page walks through bootstrap,
+start, verify and stop. Launch with the desktop icon, <code>crs-app start &lt;id&gt;</code>, or the package's
+own start script.</p>
+<div class="grid"><a class="card" href="apps/controlcenter.html"><div class="name">DAQ Control Center</div><div class="desc">PyQt6 GUI + status server</div><div class="meta">cmd 9876</div></a><a class="card" href="apps/dashboard.html"><div class="name">DAQ Message Dashboard</div><div class="desc">Flask + Socket.IO web app, ZeroMQ receiver</div><div class="meta">http 5001 · zmq 5555</div></a><a class="card" href="apps/bigredbox.html"><div class="name">Big Red Box Alerts</div><div class="desc">PyQt5 fullscreen alert listener</div><div class="meta">udp 37020</div></a><a class="card" href="apps/downtime-logger.html"><div class="name">Downtime Logger</div><div class="desc">PySide6 GUI + pluggable detectors + web status</div><div class="meta">http 8088</div></a><a class="card" href="apps/diskwatcher.html"><div class="name">Disk Watcher</div><div class="desc">Flask web service</div><div class="meta">http 5002</div></a><a class="card" href="apps/fts.html"><div class="name">File Transfer Service</div><div class="desc">Flask web service + transfer daemon</div><div class="meta">http 5003</div></a><a class="card" href="apps/heartbeatmonitor.html"><div class="name">Heartbeat Monitor</div><div class="desc">Flask web app + UDP listener</div><div class="meta">http 8081 · udp 9999</div></a><a class="card" href="apps/resource-manager.html"><div class="name">Resource Manager</div><div class="desc">FastAPI server + C++/CLI clients</div><div class="meta">http 8080</div></a><a class="card" href="apps/runlog-db.html"><div class="name">Run Log Database</div><div class="desc">Django + gunicorn viewer over Postgres</div><div class="meta">http 8000</div></a><a class="card" href="apps/trigger-scalers.html"><div class="name">Trigger Scalers</div><div class="desc">C++ Qt display (Qt5 or Qt6)</div><div class="meta">udp 5557 · zmq 5556</div></a><a class="card" href="apps/dataformat-viewer.html"><div class="name">Data Format Viewer</div><div class="desc">PyQt6 viewer + sender pair</div><div class="meta">listen 7755</div></a><a class="card" href="apps/cfocontrol.html"><div class="name">CFO Control</div><div class="desc">Terminal CLI (stdlib Python)</div><div class="meta">macromaker 5000</div></a></div>
+
+<h2 id="ports">Port map</h2>
+<p>From <code>mu2edaq-controlroom-setup/config/apps.yaml</code>. Two deliberate reassignments avoid collisions:
+heartbeatmonitor HTTP 8080→8081 (resource-manager owns 8080) and trigger-scalers UDP 5555→5557
+(dashboard ZMQ owns 5555).</p>
+<div class="tbl-wrap"><table class="tbl">
+<tr><th>Application</th><th>crs-app id</th><th>Ports</th><th>VNC session</th></tr>
+<tr><td><a href='apps/controlcenter.html'>DAQ Control Center</a></td><td><code>controlcenter</code></td><td>cmd 9876</td><td>shift-main</td></tr><tr><td><a href='apps/dashboard.html'>DAQ Message Dashboard</a></td><td><code>dashboard</code></td><td>http 5001, zmq 5555</td><td>daq-main</td></tr><tr><td><a href='apps/bigredbox.html'>Big Red Box Alerts</a></td><td><code>bigredbox</code></td><td>udp 37020</td><td>shift-main, shift-aux</td></tr><tr><td><a href='apps/downtime-logger.html'>Downtime Logger</a></td><td><code>downtime-logger</code></td><td>http 8088</td><td>shift-main</td></tr><tr><td><a href='apps/diskwatcher.html'>Disk Watcher</a></td><td><code>diskwatcher</code></td><td>http 5002</td><td>daq-main, daq-dl2</td></tr><tr><td><a href='apps/fts.html'>File Transfer Service</a></td><td><code>fts</code></td><td>http 5003</td><td>daq-main, daq-dl2</td></tr><tr><td><a href='apps/heartbeatmonitor.html'>Heartbeat Monitor</a></td><td><code>heartbeatmonitor</code></td><td>http 8081, udp 9999</td><td>shift-aux</td></tr><tr><td><a href='apps/resource-manager.html'>Resource Manager</a></td><td><code>resource-manager</code></td><td>http 8080</td><td>daq-main</td></tr><tr><td><a href='apps/runlog-db.html'>Run Log Database</a></td><td><code>runlog-db</code></td><td>http 8000</td><td>shift-aux</td></tr><tr><td><a href='apps/trigger-scalers.html'>Trigger Scalers</a></td><td><code>trigger-scalers</code></td><td>udp 5557, zmq 5556</td><td>shift-main</td></tr><tr><td><a href='apps/dataformat-viewer.html'>Data Format Viewer</a></td><td><code>dataformat-viewer</code></td><td>listen 7755</td><td>daq-aux</td></tr><tr><td><a href='apps/cfocontrol.html'>CFO Control</a></td><td><code>cfocontrol</code></td><td>macromaker 5000</td><td>daq-aux</td></tr>
+</table></div>
+
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

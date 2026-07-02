@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Service Discovery — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html">Applications</a><a href="../tools.html" class="active">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../tools.html">Tools</a> › Service Discovery</div>
+<div class="detail">
+<div>
+<div class="eyebrow">stdlib-only library + CLI</div>
+<h1>Service Discovery</h1>
+<p class="lede">UDP multicast service discovery: see which DAQ applications are running, where, and who they are. Applications embed a tiny responder; operators query with one command.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install</strong><pre><code><span class="p">$</span> cd mu2edaq-discovery
+<span class="p">$</span> ./bootstrap.sh        # venv + dev deps
+<span class="c"># or into an existing environment:</span>
+<span class="p">$</span> pip install -e .</code></pre></li><li><strong>Query the network</strong><pre><code><span class="p">$</span> mu2edaq-discover                          # table of everything
+<span class="p">$</span> mu2edaq-discover --filter app=vnc         # only VNC sessions
+<span class="p">$</span> mu2edaq-discover --json | python3 -m json.tool</code></pre></li><li><strong>Embed a responder in your application</strong><p>Two lines; protocol mu2edaq-discovery/1 on multicast 239.255.42.99:28999 (see doc/PROTOCOL.md).</p><pre><code>from mu2edaq_discovery import Responder
+Responder(app="myapp", port=5001).start()</code></pre></li></ol>
+<h2>Notes</h2><div class="note">Multicast does not traverse the FNAL gateway — query from inside the DAQ network. Config precedence: CLI &gt; MU2EDAQ_DISCOVERY_* env &gt; --config YAML &gt; defaults.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-discovery">mu2edaq-discovery</a></dd><dt>Type</dt><dd>stdlib-only library + CLI</dd><dt>Ports</dt><dd><span class="chip">multicast 28999</span></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

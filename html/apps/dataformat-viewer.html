@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Data Format Viewer — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › Data Format Viewer</div>
+<div class="detail">
+<div>
+<div class="eyebrow">PyQt6 viewer + sender pair</div>
+<h1>Data Format Viewer</h1>
+<p class="lede">Displays Mu2e ROC packet bytes decoded field-by-field from YAML format definitions; data comes in by hand, from file, or over TCP from the companion sender.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install dependencies (first time only)</strong><p>PyQt6 and PyYAML, plus the discovery sibling inside mu2edaq-main.</p><pre><code><span class="p">$</span> cd mu2edaq-dataformat-viewer
+<span class="p">$</span> python3 -m venv venv
+<span class="p">$</span> venv/bin/pip install ../mu2edaq-discovery -r requirements.txt</code></pre></li><li><strong>Start the viewer</strong><p>TCP listen port 7755 per apps.yaml. Format definitions live in formats/.</p><pre><code><span class="p">$</span> venv/bin/python mu2edaq-dataformat-viewer.py
+<span class="c"># or: crs-app start dataformat-viewer</span></code></pre></li><li><strong>Start the sender (second terminal)</strong><p>Builds packets field-by-field from the same YAML definitions and ships them to the viewer.</p><pre><code><span class="p">$</span> venv/bin/python mu2edaq-dataformat-sender.py</code></pre></li><li><strong>Optional: build the C++ helper</strong><pre><code><span class="p">$</span> cmake -S cpp -B build-cpp &amp;&amp; cmake --build build-cpp -j</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> crs-app stop dataformat-viewer   # or close the windows</code></pre></li></ol>
+
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-dataformat-viewer">mu2edaq-dataformat-viewer</a></dd><dt>Type</dt><dd>PyQt6 viewer + sender pair</dd><dt>Ports</dt><dd><span class="chip">listen 7755</span></dd><dt>Session</dt><dd>daq-aux</dd><dt>Launcher</dt><dd><code>crs-app start dataformat-viewer</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

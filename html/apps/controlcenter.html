@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAQ Control Center — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › DAQ Control Center</div>
+<div class="detail">
+<div>
+<div class="eyebrow">PyQt6 GUI + status server</div>
+<h1>DAQ Control Center</h1>
+<p class="lede">Central control GUI: an embedded web grid of the other DAQ services plus a status bar fed by a TCP status server.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><p>Creates ./venv and installs PyQt6, PyQt6-WebEngine and PyYAML.</p><pre><code><span class="p">$</span> cd mu2edaq-controlcenter
+<span class="p">$</span> ./bootstrap.sh</code></pre></li><li><strong>Start the Control Center</strong><p>Runs src/controlcenter.py in the background with config/controlcenter.yaml and writes controlcenter.pid. The status-server port comes from CRS_PORT_CMD (exported by crs-app; default 9876).</p><pre><code><span class="p">$</span> ./start.sh
+<span class="c"># or via the control-room launcher:</span>
+<span class="p">$</span> crs-app start controlcenter</code></pre></li><li><strong>Verify</strong><p>The GUI window opens on the current display. Push a test message to the status bar:</p><pre><code><span class="p">$</span> venv/bin/python src/controlcenter_send.py --port 9876 "status: test message"</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop.sh
+<span class="c"># or: crs-app stop controlcenter</span></code></pre></li></ol>
+<h2>Notes</h2><div class="note">Needs a display (VNC session <b>shift-main</b> in production). For headless smoke tests set <code>QT_QPA_PLATFORM=offscreen</code>.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-controlcenter">mu2edaq-controlcenter</a></dd><dt>Type</dt><dd>PyQt6 GUI + status server</dd><dt>Ports</dt><dd><span class="chip">cmd 9876</span></dd><dt>Session</dt><dd>shift-main</dd><dt>Launcher</dt><dd><code>crs-app start controlcenter</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

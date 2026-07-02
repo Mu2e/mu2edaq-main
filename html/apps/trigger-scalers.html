@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trigger Scalers — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › Trigger Scalers</div>
+<div class="detail">
+<div>
+<div class="eyebrow">C++ Qt display (Qt5 or Qt6)</div>
+<h1>Trigger Scalers</h1>
+<p class="lede">Live trigger-rate scaler display; receives counts over UDP or ZeroMQ and renders a Qt board sized for the control-room wall.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Build (first time only)</strong><p>Requires cmake ≥ 3.16, a C++17 compiler, Qt5 or Qt6 dev packages, yaml-cpp; ZeroMQ support is on by default.</p><pre><code><span class="p">$</span> cd mu2edaq-trigger-scalers
+<span class="p">$</span> cmake -B build -DWITH_ZEROMQ=ON      # add -DUSE_QT6=ON for Qt6
+<span class="p">$</span> cmake --build build -j</code></pre></li><li><strong>Start the display</strong><p>UDP listen port 5557 (moved off 5555, which the dashboard's ZMQ owns) and ZMQ 5556, per apps.yaml.</p><pre><code><span class="p">$</span> ./build/trigger-scalers --config config/scalars.yaml
+<span class="p">$</span> ./build/trigger-scalers --config config/scalars.yaml --protocol zeromq --size large
+<span class="c"># or: crs-app start trigger-scalers</span></code></pre></li><li><strong>Verify</strong><p>Send test counts with the bundled tool (built when WITH_ZEROMQ=ON):</p><pre><code><span class="p">$</span> ./build/zmq-sender --port 5556</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> crs-app stop trigger-scalers   # or close the window / kill the process</code></pre></li></ol>
+
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-trigger-scalers">mu2edaq-trigger-scalers</a></dd><dt>Type</dt><dd>C++ Qt display (Qt5 or Qt6)</dd><dt>Ports</dt><dd><span class="chip">udp 5557</span> <span class="chip">zmq 5556</span></dd><dt>Session</dt><dd>shift-main</dd><dt>Launcher</dt><dd><code>crs-app start trigger-scalers</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

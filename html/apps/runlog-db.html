@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run Log Database — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › Run Log Database</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Django + gunicorn viewer over Postgres</div>
+<h1>Run Log Database</h1>
+<p class="lede">Web viewer for the Mu2e run-log Postgres database. Django only creates its own auth/session tables — the run-log tables are never modified.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Bootstrap (first time only)</strong><p>Creates the venv and installs Django 4.2, allauth, psycopg2 and gunicorn; set database credentials in .env.</p><pre><code><span class="p">$</span> cd mu2edaq-runlog-db
+<span class="p">$</span> ./bootstrap-mu2e-rundb-viewer
+<span class="p">$</span> cp config/env.example .env &amp;&amp; $EDITOR .env   # DB credentials</code></pre></li><li><strong>Start the viewer</strong><p>Runs manage.py migrate then gunicorn (4 workers). Environment: DJANGO_ENV (development|production), RUNLOGDB_HOST (default 127.0.0.1), port precedence CRS_PORT_HTTP > RUNLOGDB_PORT > 8000.</p><pre><code><span class="p">$</span> ./start-mu2edaq-runlog-db.sh
+<span class="c"># or: crs-app start runlog-db</span></code></pre></li><li><strong>Verify</strong><pre><code><span class="p">$</span> curl -s http://localhost:8000/ | head
+<span class="p">$</span> venv/bin/python manage.py check</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-runlog-db.sh
+<span class="c"># or: crs-app stop runlog-db</span></code></pre></li></ol>
+<h2>Notes</h2><div class="note">A Dockerfile is provided as an alternative deployment; the container entrypoint keeps gunicorn in the foreground.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-runlog-db">mu2edaq-runlog-db</a></dd><dt>Type</dt><dd>Django + gunicorn viewer over Postgres</dd><dt>Ports</dt><dd><span class="chip">http 8000</span></dd><dt>Session</dt><dd>shift-aux</dd><dt>Launcher</dt><dd><code>crs-app start runlog-db</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

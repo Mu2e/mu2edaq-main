@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Downtime Logger — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › Downtime Logger</div>
+<div class="detail">
+<div>
+<div class="eyebrow">PySide6 GUI + pluggable detectors + web status</div>
+<h1>Downtime Logger</h1>
+<p class="lede">Monitors the DAQ through pluggable detectors (UDP, ZeroMQ, SOAP, logfile, disk) and records downtime events to a database, with a GUI and a web status page.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Bootstrap (first time only)</strong><p>Creates ./venv and installs the package editable with its detector dependencies.</p><pre><code><span class="p">$</span> cd mu2edaq-downtime-logger
+<span class="p">$</span> ./bootstrap.sh</code></pre></li><li><strong>Start the logger</strong><p>Backgrounds the app with config/local.yaml, writing mu2edaq-downtime-logger.pid and .log next to the script. Web status port from apps.yaml (8088). Use --foreground when debugging.</p><pre><code><span class="p">$</span> ./start-mu2edaq-downtime-logger.sh
+<span class="p">$</span> ./start-mu2edaq-downtime-logger.sh --config config/local.yaml --log-level DEBUG --foreground
+<span class="c"># or: crs-app start downtime-logger</span></code></pre></li><li><strong>Verify</strong><p>The GUI appears; the pytest suite is the fastest full check:</p><pre><code><span class="p">$</span> venv/bin/python -m pytest tests -q    # 67 tests</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-downtime-logger.sh
+<span class="c"># or: crs-app stop downtime-logger</span></code></pre></li></ol>
+<h2>Notes</h2><div class="warn">The package depends on <code>mu2edaq-discovery</code>, which is not on PyPI. Inside the mu2edaq-main checkout install the sibling first: <code>venv/bin/pip install ../mu2edaq-discovery</code> — see <a href='https://github.com/Mu2e/mu2edaq-main/issues/4'>mu2edaq-main#4</a>.</div><div class="note">Postgres storage is optional: <code>pip install .[postgres]</code>.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-downtime-logger">mu2edaq-downtime-logger</a></dd><dt>Type</dt><dd>PySide6 GUI + pluggable detectors + web status</dd><dt>Ports</dt><dd><span class="chip">http 8088</span></dd><dt>Session</dt><dd>shift-main</dd><dt>Launcher</dt><dd><code>crs-app start downtime-logger</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shifter Tools — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html">Applications</a><a href="../tools.html" class="active">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../tools.html">Tools</a> › Shifter Tools</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Shift-operations scripts</div>
+<h1>Shifter Tools</h1>
+<p class="lede">Utilities shifters use to bring up ots environments, verify the network, and move files around the cluster.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Run directly (no build step)</strong><pre><code><span class="p">$</span> cd mu2edaq-shifter-tools
+<span class="p">$</span> ./daq-network-verify.sh            # check DAQ network reachability
+<span class="p">$</span> ./get_krb_principal.sh             # show current Kerberos principal
+<span class="p">$</span> python3 open_tunnels.py            # open standard shift tunnels
+<span class="p">$</span> python3 cluster_cp.py SRC DST      # copy across cluster nodes
+<span class="p">$</span> python3 install_daq_tools.py       # install these tools for the account</code></pre></li></ol>
+<h2>Notes</h2><div class="note"><code>setup_online</code> / <code>start_daq</code> for ots partitions are described in the README; their environment config (partitions → test releases) is per-installation.</div>
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-shifter-tools">mu2edaq-shifter-tools</a></dd><dt>Type</dt><dd>Shift-operations scripts</dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

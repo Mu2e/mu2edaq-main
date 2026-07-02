@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAQ Message Dashboard — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html" class="active">Applications</a><a href="../tools.html">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../services.html">Applications</a> › DAQ Message Dashboard</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Flask + Socket.IO web app, ZeroMQ receiver</div>
+<h1>DAQ Message Dashboard</h1>
+<p class="lede">Receives DAQ messages over ZeroMQ PUSH/PULL, logs them to SQLite, and serves a live browser dashboard over WebSocket.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><p>Creates ./venv, installs pyzmq / flask / flask-socketio / pyyaml, and creates the data, logs and config directories.</p><pre><code><span class="p">$</span> cd mu2edaq-dashboard
+<span class="p">$</span> ./bootstrap_dashboard.sh</code></pre></li><li><strong>Start the dashboard</strong><p>Daemonizes dashboard.py with config/dashboard_config.yaml and writes dashboard.pid. Web port from CRS_PORT_HTTP (default 5001), ZMQ ingest port from CRS_PORT_ZMQ (default 5555).</p><pre><code><span class="p">$</span> ./start_dashboard.sh
+<span class="c"># or: crs-app start dashboard</span></code></pre></li><li><strong>Verify</strong><p>Open the web UI and send a test message with the bundled Python sender:</p><pre><code><span class="p">$</span> curl -s http://localhost:5001/ | head
+<span class="p">$</span> venv/bin/python sender.py --port 5555 --count 3</code></pre></li><li><strong>Optional: build the C++ sender</strong><p>For C++ producers; requires cmake ≥ 3.15 and libzmq (zeromq-devel on AL9).</p><pre><code><span class="p">$</span> cmake -S . -B build &amp;&amp; cmake --build build -j
+<span class="p">$</span> ./build/mu2edaq_sender --help</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop_dashboard.sh
+<span class="c"># or: crs-app stop dashboard</span></code></pre></li></ol>
+
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-dashboard">mu2edaq-dashboard</a></dd><dt>Type</dt><dd>Flask + Socket.IO web app, ZeroMQ receiver</dd><dt>Ports</dt><dd><span class="chip">http 5001</span> <span class="chip">zmq 5555</span></dd><dt>Session</dt><dd>daq-main</dd><dt>Launcher</dt><dd><code>crs-app start dashboard</code></dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

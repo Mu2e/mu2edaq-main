@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cluster Tools (ssh-selector) — mu2edaq runbook</title>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html"><span class="dot"></span>mu2edaq runbook</a>
+  <a href="../index.html">Overview</a><a href="../setup.html">Common setup</a><a href="../services.html">Applications</a><a href="../tools.html" class="active">Tools</a>
+  <span class="spacer"></span>
+  <span class="env">AL9 · Python 3.9 · mu2edaq-main</span>
+</nav>
+<div class="wrap">
+
+<div class="crumbs"><a href="../index.html">Overview</a> ›
+  <a href="../tools.html">Tools</a> › Cluster Tools (ssh-selector)</div>
+<div class="detail">
+<div>
+<div class="eyebrow">Textual TUI</div>
+<h1>Cluster Tools (ssh-selector)</h1>
+<p class="lede">Interactive terminal picker for ssh-ing around the DAQ cluster, driven by YAML host inventories.</p>
+<h2>Start procedure</h2>
+<ol class="steps"><li><strong>Install</strong><pre><code><span class="p">$</span> cd mu2edaq-cluster-tools
+<span class="p">$</span> ./install.sh
+<span class="c"># or: pip install git+https://github.com/Mu2e/mu2edaq-cluster-tools.git</span></code></pre></li><li><strong>Run</strong><pre><code><span class="p">$</span> ssh-selector                     # auto-discovers configs in ./ and ./config/
+<span class="p">$</span> ssh-selector -c config/mu2e_daq.yaml
+<span class="p">$</span> ssh-selector --version</code></pre></li></ol>
+
+</div>
+<aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-cluster-tools">mu2edaq-cluster-tools</a></dd><dt>Type</dt><dd>Textual TUI</dd></dl></aside>
+</div>
+<div class="foot">
+  <span>Mu2e DAQ operations runbook</span>
+  <a href="https://github.com/Mu2e/mu2edaq-main">Mu2e/mu2edaq-main</a>
+  <span>Port truth: <a href="../services.html#ports">apps.yaml</a></span>
+</div>
+</div>
+</body>
+</html>

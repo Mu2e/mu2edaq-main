@@ -24,8 +24,8 @@
 <p class="lede">Listens for UDP broadcast alerts and throws a full-screen red alert window at the shifter when one arrives.</p>
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Install dependencies (first time only)</strong><p>PyQt5 ≥ 5.15 into a venv (or the session's shared environment).</p><pre><code><span class="p">$</span> cd mu2edaq-bigredbox
-<span class="p">$</span> python3 -m venv venv &amp;&amp; venv/bin/pip install -r requirements.txt</code></pre></li><li><strong>Start the alert listener</strong><p>Backgrounds daq_alert.py; UDP port from CRS_PORT_UDP (default 37020). Writes /tmp/daq_alert.pid and logs to /tmp/daq_alert.log. DISPLAY must point at the shifter screen.</p><pre><code><span class="p">$</span> ./start_daq_alert.sh
-<span class="c"># or: crs-app start bigredbox</span></code></pre></li><li><strong>Verify</strong><p>Fire a demo alert from any machine on the subnet:</p><pre><code><span class="p">$</span> venv/bin/python demo_sender.py</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop_daq_alert.sh
+<span class="p">$</span> python3 -m venv venv &amp;&amp; venv/bin/pip install -r requirements.txt</code></pre></li><li><strong>Start the alert listener</strong><p>Backgrounds daq_alert.py; UDP port from CRS_PORT_UDP (default 37020). Writes /tmp/daq_alert.pid and logs to /tmp/daq_alert.log. DISPLAY must point at the shifter screen.</p><pre><code><span class="p">$</span> ./start-mu2edaq-bigredbox.sh
+<span class="c"># or: crs-app start bigredbox</span></code></pre></li><li><strong>Verify</strong><p>Fire a demo alert from any machine on the subnet:</p><pre><code><span class="p">$</span> venv/bin/python demo_sender.py</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-bigredbox.sh
 <span class="c"># or: crs-app stop bigredbox</span></code></pre></li></ol>
 <h2>Notes</h2><div class="note">This is the only PyQt5 app in the suite (everything else is PyQt6/PySide6) — see <a href='https://github.com/Mu2e/mu2edaq-main/issues/2'>mu2edaq-main#2</a>.</div>
 </div>

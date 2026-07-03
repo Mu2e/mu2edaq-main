@@ -24,8 +24,8 @@
 <p class="lede">Watches the DAQ data disks and serves a capacity/health status page.</p>
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><pre><code><span class="p">$</span> cd mu2edaq-diskwatcher
-<span class="p">$</span> ./bootstrap_diskwatcher.sh</code></pre></li><li><strong>Start the watcher</strong><p>Daemonizes diskwatcher.py with config/mu2edaq-diskwatcher.yaml, writing diskwatcher.pid. Web port from CRS_PORT_HTTP (default 5002).</p><pre><code><span class="p">$</span> ./start_diskwatcher.sh
-<span class="c"># or: crs-app start diskwatcher</span></code></pre></li><li><strong>Verify</strong><pre><code><span class="p">$</span> curl -s http://localhost:5002/ | head</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop_diskwatcher.sh
+<span class="p">$</span> ./bootstrap_diskwatcher.sh</code></pre></li><li><strong>Start the watcher</strong><p>Daemonizes diskwatcher.py with config/mu2edaq-diskwatcher.yaml, writing diskwatcher.pid. Web port from CRS_PORT_HTTP (default 5002).</p><pre><code><span class="p">$</span> ./start-mu2edaq-diskwatcher.sh
+<span class="c"># or: crs-app start diskwatcher</span></code></pre></li><li><strong>Verify</strong><pre><code><span class="p">$</span> curl -s http://localhost:5002/ | head</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-diskwatcher.sh
 <span class="c"># or: crs-app stop diskwatcher</span></code></pre></li></ol>
 
 </div>

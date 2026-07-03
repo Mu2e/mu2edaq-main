@@ -24,11 +24,11 @@
 <p class="lede">Moves completed data files off the DAQ hosts (paramiko/scp), with a web control page and optional SAML single sign-on.</p>
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><p>Installs flask, paramiko, scp, python3-saml and friends. On AL9 the SAML stack installs from binary wheels — no system -devel packages needed.</p><pre><code><span class="p">$</span> cd mu2edaq-fts
-<span class="p">$</span> ./bootstrap_fts.sh</code></pre></li><li><strong>Start the service</strong><p>Daemonizes mu2edaq_fts.py with config/test_config.yaml; the daemon writes config/test_config.pid. Web port from CRS_PORT_HTTP (default 5003), overriding web_server.port in the config.</p><pre><code><span class="p">$</span> ./start_fts.sh
-<span class="p">$</span> ./start_fts.sh config/my_config.yaml     # alternate config
+<span class="p">$</span> ./bootstrap_fts.sh</code></pre></li><li><strong>Start the service</strong><p>Daemonizes mu2edaq_fts.py with config/test_config.yaml; the daemon writes config/test_config.pid. Web port from CRS_PORT_HTTP (default 5003), overriding web_server.port in the config.</p><pre><code><span class="p">$</span> ./start-mu2edaq-fts.sh
+<span class="p">$</span> ./start-mu2edaq-fts.sh config/my_config.yaml     # alternate config
 <span class="c"># or: crs-app start fts</span></code></pre></li><li><strong>Verify</strong><pre><code><span class="p">$</span> curl -s http://localhost:5003/ | head
-<span class="p">$</span> venv/bin/python -m pytest tests -q</code></pre></li><li><strong>Stop</strong><p>Pass the pid file if you started with a non-default config.</p><pre><code><span class="p">$</span> ./stop_fts.sh
-<span class="p">$</span> ./stop_fts.sh config/my_config.pid
+<span class="p">$</span> venv/bin/python -m pytest tests -q</code></pre></li><li><strong>Stop</strong><p>Pass the pid file if you started with a non-default config.</p><pre><code><span class="p">$</span> ./stop-mu2edaq-fts.sh
+<span class="p">$</span> ./stop-mu2edaq-fts.sh config/my_config.pid
 <span class="c"># or: crs-app stop fts</span></code></pre></li></ol>
 <h2>Notes</h2><div class="warn">If the checkout contains a committed <code>venv/</code> directory, delete it and re-run the bootstrap — it holds macOS Python 3.12 binaries that cannot work on AL9 (<a href='https://github.com/Mu2e/mu2edaq-fts/issues/7'>fts#7</a>).</div>
 </div>

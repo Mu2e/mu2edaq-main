@@ -24,10 +24,10 @@
 <p class="lede">Receives DAQ messages over ZeroMQ PUSH/PULL, logs them to SQLite, and serves a live browser dashboard over WebSocket.</p>
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><p>Creates ./venv, installs pyzmq / flask / flask-socketio / pyyaml, and creates the data, logs and config directories.</p><pre><code><span class="p">$</span> cd mu2edaq-dashboard
-<span class="p">$</span> ./bootstrap_dashboard.sh</code></pre></li><li><strong>Start the dashboard</strong><p>Daemonizes dashboard.py with config/dashboard_config.yaml and writes dashboard.pid. Web port from CRS_PORT_HTTP (default 5001), ZMQ ingest port from CRS_PORT_ZMQ (default 5555).</p><pre><code><span class="p">$</span> ./start_dashboard.sh
+<span class="p">$</span> ./bootstrap_dashboard.sh</code></pre></li><li><strong>Start the dashboard</strong><p>Daemonizes dashboard.py with config/dashboard_config.yaml and writes dashboard.pid. Web port from CRS_PORT_HTTP (default 5001), ZMQ ingest port from CRS_PORT_ZMQ (default 5555).</p><pre><code><span class="p">$</span> ./start-mu2edaq-dashboard.sh
 <span class="c"># or: crs-app start dashboard</span></code></pre></li><li><strong>Verify</strong><p>Open the web UI and send a test message with the bundled Python sender:</p><pre><code><span class="p">$</span> curl -s http://localhost:5001/ | head
 <span class="p">$</span> venv/bin/python sender.py --port 5555 --count 3</code></pre></li><li><strong>Optional: build the C++ sender</strong><p>For C++ producers; requires cmake ≥ 3.15 and libzmq (zeromq-devel on AL9).</p><pre><code><span class="p">$</span> cmake -S . -B build &amp;&amp; cmake --build build -j
-<span class="p">$</span> ./build/mu2edaq_sender --help</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop_dashboard.sh
+<span class="p">$</span> ./build/mu2edaq_sender --help</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-dashboard.sh
 <span class="c"># or: crs-app stop dashboard</span></code></pre></li></ol>
 
 </div>

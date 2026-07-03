@@ -24,9 +24,9 @@
 <p class="lede">Central control GUI: an embedded web grid of the other DAQ services plus a status bar fed by a TCP status server.</p>
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><p>Creates ./venv and installs PyQt6, PyQt6-WebEngine and PyYAML.</p><pre><code><span class="p">$</span> cd mu2edaq-controlcenter
-<span class="p">$</span> ./bootstrap.sh</code></pre></li><li><strong>Start the Control Center</strong><p>Runs src/controlcenter.py in the background with config/controlcenter.yaml and writes controlcenter.pid. The status-server port comes from CRS_PORT_CMD (exported by crs-app; default 9876).</p><pre><code><span class="p">$</span> ./start.sh
+<span class="p">$</span> ./bootstrap.sh</code></pre></li><li><strong>Start the Control Center</strong><p>Runs src/controlcenter.py in the background with config/controlcenter.yaml and writes controlcenter.pid. The status-server port comes from CRS_PORT_CMD (exported by crs-app; default 9876).</p><pre><code><span class="p">$</span> ./start-mu2edaq-controlcenter.sh
 <span class="c"># or via the control-room launcher:</span>
-<span class="p">$</span> crs-app start controlcenter</code></pre></li><li><strong>Verify</strong><p>The GUI window opens on the current display. Push a test message to the status bar:</p><pre><code><span class="p">$</span> venv/bin/python src/controlcenter_send.py --port 9876 "status: test message"</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop.sh
+<span class="p">$</span> crs-app start controlcenter</code></pre></li><li><strong>Verify</strong><p>The GUI window opens on the current display. Push a test message to the status bar:</p><pre><code><span class="p">$</span> venv/bin/python src/controlcenter_send.py --port 9876 "status: test message"</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-controlcenter.sh
 <span class="c"># or: crs-app stop controlcenter</span></code></pre></li></ol>
 <h2>Notes</h2><div class="note">Needs a display (VNC session <b>shift-main</b> in production). For headless smoke tests set <code>QT_QPA_PLATFORM=offscreen</code>.</div>
 </div>

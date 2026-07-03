@@ -25,8 +25,11 @@
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Install dependencies (first time only)</strong><p>PyQt6 and PyYAML, plus the discovery sibling inside mu2edaq-main.</p><pre><code><span class="p">$</span> cd mu2edaq-dataformat-viewer
 <span class="p">$</span> python3 -m venv venv
-<span class="p">$</span> venv/bin/pip install ../mu2edaq-discovery -r requirements.txt</code></pre></li><li><strong>Start the viewer</strong><p>TCP listen port 7755 per apps.yaml. Format definitions live in formats/.</p><pre><code><span class="p">$</span> venv/bin/python mu2edaq-dataformat-viewer.py
-<span class="c"># or: crs-app start dataformat-viewer</span></code></pre></li><li><strong>Start the sender (second terminal)</strong><p>Builds packets field-by-field from the same YAML definitions and ships them to the viewer.</p><pre><code><span class="p">$</span> venv/bin/python mu2edaq-dataformat-sender.py</code></pre></li><li><strong>Optional: build the C++ helper</strong><pre><code><span class="p">$</span> cmake -S cpp -B build-cpp &amp;&amp; cmake --build build-cpp -j</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> crs-app stop dataformat-viewer   # or close the windows</code></pre></li></ol>
+<span class="p">$</span> venv/bin/pip install ../mu2edaq-discovery -r requirements.txt</code></pre></li><li><strong>Start the viewer</strong><p>Backgrounds the viewer with dataformat-viewer.pid/.log next to the script. TCP listen port 7755 from CRS_PORT_LISTEN. Format definitions live in formats/.</p><pre><code><span class="p">$</span> ./start-mu2edaq-dataformat-viewer.sh
+<span class="c"># by hand:</span>
+<span class="p">$</span> venv/bin/python mu2edaq-dataformat-viewer.py
+<span class="c"># or: crs-app start dataformat-viewer</span></code></pre></li><li><strong>Start the sender (second terminal)</strong><p>Builds packets field-by-field from the same YAML definitions and ships them to the viewer.</p><pre><code><span class="p">$</span> venv/bin/python mu2edaq-dataformat-sender.py</code></pre></li><li><strong>Optional: build the C++ helper</strong><pre><code><span class="p">$</span> cmake -S cpp -B build-cpp &amp;&amp; cmake --build build-cpp -j</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-dataformat-viewer.sh
+<span class="c"># or: crs-app stop dataformat-viewer</span></code></pre></li></ol>
 
 </div>
 <aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-dataformat-viewer">mu2edaq-dataformat-viewer</a></dd><dt>Type</dt><dd>PyQt6 viewer + sender pair</dd><dt>Ports</dt><dd><span class="chip">listen 7755</span></dd><dt>Session</dt><dd>daq-aux</dd><dt>Launcher</dt><dd><code>crs-app start dataformat-viewer</code></dd></dl></aside>

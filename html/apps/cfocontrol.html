@@ -24,6 +24,7 @@
 <p class="lede">Command-line control of the CFO via the MacroMaker UDP interface — runs in a terminal, no virtual environment needed.</p>
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Run</strong><p>Pure-stdlib Python 3; point it at the MacroMaker host (UDP port 5000 per apps.yaml).</p><pre><code><span class="p">$</span> cd mu2edaq-CFOControl
+<span class="p">$</span> ./start-mu2edaq-cfocontrol.sh --host &lt;macromaker-host&gt;   # wrapper, port from CRS_PORT_MACROMAKER
 <span class="p">$</span> python3 CFOControl.py --host &lt;macromaker-host&gt; --port 5000
 <span class="p">$</span> python3 CFOControl.py --config my_cfo.yaml</code></pre></li><li><strong>Stop</strong><pre><code><span class="c"># interactive - exit the CLI (Ctrl-D / quit)</span></code></pre></li></ol>
 

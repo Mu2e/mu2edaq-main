@@ -24,10 +24,11 @@
 <p class="lede">Listens for JSON heartbeat packets over UDP from DAQ applications and shows a live green/red status board in the browser.</p>
 <h2>Start procedure</h2>
 <ol class="steps"><li><strong>Bootstrap the virtual environment (first time only)</strong><pre><code><span class="p">$</span> cd mu2edaq-heartbeatmonitor
-<span class="p">$</span> ./bootstrap_heartbeat_monitor.sh</code></pre></li><li><strong>Start the monitor</strong><p>Ports come from apps.yaml via crs-app: HTTP 8081 (moved off 8080, which resource-manager owns) and UDP 9999.</p><pre><code><span class="p">$</span> venv/bin/python heartbeat_monitor.py --config config/heartbeat_monitor.yaml
+<span class="p">$</span> ./bootstrap_heartbeat_monitor.sh</code></pre></li><li><strong>Start the monitor</strong><p>Daemonizes heartbeat_monitor.py with config/heartbeat_config.yaml, writing heartbeat_monitor.pid. HTTP port 8081 (moved off 8080, which resource-manager owns) and UDP 9999, from CRS_PORT_HTTP / CRS_PORT_UDP.</p><pre><code><span class="p">$</span> ./start-mu2edaq-heartbeatmonitor.sh
 <span class="c"># or: crs-app start heartbeatmonitor</span></code></pre></li><li><strong>Verify</strong><p>Send a heartbeat with the bundled sender, then check the web page:</p><pre><code><span class="p">$</span> venv/bin/python heartbeat_sender.py -n test-app -s OK --host 127.0.0.1 -p 9999
 <span class="p">$</span> curl -s http://localhost:8081/ | head</code></pre></li><li><strong>Optional: build the C++ sender</strong><p>Same CLI as the Python sender; fetches nlohmann/json at configure time if not installed.</p><pre><code><span class="p">$</span> cmake -S cpp_sender -B build-sender &amp;&amp; cmake --build build-sender -j
-<span class="p">$</span> ctest --test-dir build-sender</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> crs-app stop heartbeatmonitor   # or kill the pid from --pid-file</code></pre></li></ol>
+<span class="p">$</span> ctest --test-dir build-sender</code></pre></li><li><strong>Stop</strong><pre><code><span class="p">$</span> ./stop-mu2edaq-heartbeatmonitor.sh
+<span class="c"># or: crs-app stop heartbeatmonitor</span></code></pre></li></ol>
 
 </div>
 <aside class="facts"><h3>At a glance</h3><dl><dt>Package</dt><dd><a href="https://github.com/Mu2e/mu2edaq-heartbeatmonitor">mu2edaq-heartbeatmonitor</a></dd><dt>Type</dt><dd>Flask web app + UDP listener</dd><dt>Ports</dt><dd><span class="chip">http 8081</span> <span class="chip">udp 9999</span></dd><dt>Session</dt><dd>shift-aux</dd><dt>Launcher</dt><dd><code>crs-app start heartbeatmonitor</code></dd></dl></aside>

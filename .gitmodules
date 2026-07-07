@@ -103,3 +103,6 @@
 [submodule "mu2edaq-discovery"]
 	path = mu2edaq-discovery
 	url = git@github.com:Mu2e/mu2edaq-discovery.git
+[submodule "mu2edaq-phone-notification-system"]
+	path = mu2edaq-phone-notification-system
+	url = git@github.com:Mu2e/mu2edaq-phone-notification-system.git

@@ -69,11 +69,17 @@ pkg_editable_spec() {
 # the sibling checkout.
 pkg_sibling_deps() {
   case "$1" in
+    mu2edaq-bigredbox)         echo "mu2edaq-discovery" ;;
+    mu2edaq-controlcenter)     echo "mu2edaq-discovery" ;;
     mu2edaq-controlroom-setup) echo "mu2edaq-discovery" ;;
+    mu2edaq-dashboard)         echo "mu2edaq-discovery" ;;
     mu2edaq-dataformat-viewer) echo "mu2edaq-discovery" ;;
+    mu2edaq-diskwatcher)       echo "mu2edaq-discovery" ;;
     mu2edaq-downtime-logger)   echo "mu2edaq-discovery" ;;
+    mu2edaq-fts)               echo "mu2edaq-discovery" ;;
     mu2edaq-heartbeatmonitor)  echo "mu2edaq-discovery" ;;
     mu2edaq-resource-manager)  echo "mu2edaq-discovery" ;;
+    mu2edaq-runlog-db)         echo "mu2edaq-discovery" ;;
     *) echo "" ;;
   esac
 }

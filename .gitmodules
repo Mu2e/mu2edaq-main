@@ -109,3 +109,6 @@
 [submodule "mu2edaq-snapshot-viewer"]
 	path = mu2edaq-snapshot-viewer
 	url = git@github.com:Mu2e/mu2edaq-snapshot-viewer.git
+[submodule "mu2edaq-desktop"]
+	path = mu2edaq-desktop
+	url = git@github.com:Mu2e/mu2edaq-desktop.git

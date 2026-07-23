@@ -66,8 +66,11 @@ Some suffixes may be added (modified) latter based on testing (i.e. a release ca
 ./mu2edaq-bootstrap.sh status
 ```
 
-Confirm the submodule commits you want to tag are checked out and that the
-parent repo's pointers are committed and pushed.
+If anything is behind, pull it in with `./mu2edaq-update-submodules.sh`
+(fast-forward only, one reviewable commit) or `./mu2edaq-bootstrap.sh
+update && ./mu2edaq-bootstrap.sh bump`. Either way, confirm the submodule
+commits you want to tag are checked out and that the parent repo's pointers
+are committed and pushed before tagging.
 
 ### 2. Preview the tag operation
 
@@ -127,4 +130,5 @@ repository that already has the tag will be skipped automatically.
 
 - `man ./man/man1/mu2edaq-tag-release.1` — full man page for the tagging script
 - `man ./man/man1/mu2edaq-bootstrap.1` — man page for the bootstrap script
+- `man ./man/man1/mu2edaq-update-submodules.1` — man page for the fast-forward submodule updater
 - [GitHub releases for mu2edaq-main](https://github.com/Mu2e/mu2edaq-main/releases)

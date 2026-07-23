@@ -1,4 +1,4 @@
-.TH MU2EDAQ\-BOOTSTRAP 1 "2026-04-21" "Mu2e DAQ" "Mu2e DAQ Manual"
+.TH MU2EDAQ\-BOOTSTRAP 1 "2026-07-23" "Mu2e DAQ" "Mu2e DAQ Manual"
 .SH NAME
 mu2edaq\-bootstrap \- manage the mu2edaq\-main git submodule repository
 .SH SYNOPSIS
@@ -51,6 +51,17 @@ afterwards.
 .B status
 Print a one-line summary for each submodule showing its local HEAD commit,
 the corresponding remote HEAD, and whether it is up-to-date or behind/diverged.
+.SH NOTES
+.B update
+and
+.B bump
+merge each submodule's remote tracking branch and stage every changed
+pointer without asking questions. For a more careful update that only
+fast-forwards (never merges), skips submodules with local changes or
+diverged history, and produces a single reviewable commit summarizing what
+moved, use
+.BR mu2edaq\-update\-submodules (1)
+instead.
 .SH EXAMPLES
 Clone the full suite onto a new machine:
 .EX
@@ -91,6 +102,7 @@ mu2edaq-controlroom	github.com/Mu2e/mu2edaq-controlroom
 mu2edaq-controlroom-setup	github.com/Mu2e/mu2edaq-controlroom-setup
 mu2edaq-dashboard	github.com/Mu2e/mu2edaq-dashboard
 mu2edaq-dataformat-viewer	github.com/Mu2e/mu2edaq-dataformat-viewer
+mu2edaq-desktop	github.com/Mu2e/mu2edaq-desktop
 mu2edaq-discovery	github.com/Mu2e/mu2edaq-discovery
 mu2edaq-diskwatcher	github.com/Mu2e/mu2edaq-diskwatcher
 mu2edaq-downtime-logger	github.com/Mu2e/mu2edaq-downtime-logger
@@ -98,9 +110,12 @@ mu2edaq-fts	github.com/Mu2e/mu2edaq-fts
 mu2edaq-heartbeatmonitor	github.com/Mu2e/mu2edaq-heartbeatmonitor
 mu2edaq-kpp-scripts	github.com/Mu2e/mu2edaq-kpp-scripts
 mu2edaq-operations	github.com/Mu2e/daq-operations
+mu2edaq-phone-notification-system	github.com/Mu2e/mu2edaq-phone-notification-system
 mu2edaq-resource-manager	github.com/Mu2e/mu2edaq-resource-manager
+mu2edaq-reverse-proxy	github.com/Mu2e/mu2edaq-reverse-proxy
 mu2edaq-runlog-db	github.com/Mu2e/mu2edaq-runlog-db
 mu2edaq-shifter-tools	github.com/Mu2e/mu2edaq-shifter-tools
+mu2edaq-snapshot-viewer	github.com/Mu2e/mu2edaq-snapshot-viewer
 mu2edaq-trigger-scalers	github.com/Mu2e/mu2edaq-trigger-scalers
 otsdaq-mu2e	github.com/Mu2e/otsdaq-mu2e
 otsdaq-mu2e-calorimeter	github.com/Mu2e/otsdaq-mu2e-calorimeter
@@ -120,6 +135,8 @@ Submodule URL and path configuration, located at the root of the
 .B mu2edaq\-main
 repository.
 .SH SEE ALSO
+.BR mu2edaq\-update\-submodules (1),
+.BR mu2edaq\-tag\-release (1),
 .BR git (1),
 .BR git\-submodule (1),
 .BR git\-clone (1)

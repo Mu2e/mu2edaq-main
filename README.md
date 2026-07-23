@@ -20,6 +20,7 @@ Top-level meta-repository for the Mu2e DAQ software suite. Each subdirectory is 
 | mu2edaq-controlroom-setup | [Mu2e/mu2edaq-controlroom-setup](https://github.com/Mu2e/mu2edaq-controlroom-setup) |
 | mu2edaq-dashboard | [Mu2e/mu2edaq-dashboard](https://github.com/Mu2e/mu2edaq-dashboard) |
 | mu2edaq-dataformat-viewer | [Mu2e/mu2edaq-dataformat-viewer](https://github.com/Mu2e/mu2edaq-dataformat-viewer) |
+| mu2edaq-desktop | [Mu2e/mu2edaq-desktop](https://github.com/Mu2e/mu2edaq-desktop) |
 | mu2edaq-discovery | [Mu2e/mu2edaq-discovery](https://github.com/Mu2e/mu2edaq-discovery) |
 | mu2edaq-diskwatcher | [Mu2e/mu2edaq-diskwatcher](https://github.com/Mu2e/mu2edaq-diskwatcher) |
 | mu2edaq-downtime-logger | [Mu2e/mu2edaq-downtime-logger](https://github.com/Mu2e/mu2edaq-downtime-logger) |
@@ -27,9 +28,12 @@ Top-level meta-repository for the Mu2e DAQ software suite. Each subdirectory is 
 | mu2edaq-heartbeatmonitor | [Mu2e/mu2edaq-heartbeatmonitor](https://github.com/Mu2e/mu2edaq-heartbeatmonitor) |
 | mu2edaq-kpp-scripts | [Mu2e/mu2edaq-kpp-scripts](https://github.com/Mu2e/mu2edaq-kpp-scripts) |
 | mu2edaq-operations | [Mu2e/daq-operations](https://github.com/Mu2e/daq-operations) |
+| mu2edaq-phone-notification-system | [Mu2e/mu2edaq-phone-notification-system](https://github.com/Mu2e/mu2edaq-phone-notification-system) |
 | mu2edaq-resource-manager | [Mu2e/mu2edaq-resource-manager](https://github.com/Mu2e/mu2edaq-resource-manager) |
+| mu2edaq-reverse-proxy | [Mu2e/mu2edaq-reverse-proxy](https://github.com/Mu2e/mu2edaq-reverse-proxy) |
 | mu2edaq-runlog-db | [Mu2e/mu2edaq-runlog-db](https://github.com/Mu2e/mu2edaq-runlog-db) |
 | mu2edaq-shifter-tools | [Mu2e/mu2edaq-shifter-tools](https://github.com/Mu2e/mu2edaq-shifter-tools) |
+| mu2edaq-snapshot-viewer | [Mu2e/mu2edaq-snapshot-viewer](https://github.com/Mu2e/mu2edaq-snapshot-viewer) |
 | mu2edaq-trigger-scalers | [Mu2e/mu2edaq-trigger-scalers](https://github.com/Mu2e/mu2edaq-trigger-scalers) |
 | otsdaq-mu2e | [Mu2e/otsdaq-mu2e](https://github.com/Mu2e/otsdaq-mu2e) |
 | otsdaq-mu2e-calorimeter | [Mu2e/otsdaq-mu2e-calorimeter](https://github.com/Mu2e/otsdaq-mu2e-calorimeter) |
@@ -102,21 +106,29 @@ A man page is also available: `man ./man/man1/mu2edaq-bootstrap.1`
 
 ## Updating submodules
 
-To pull the latest commits for all submodules:
+**Recommended:** `mu2edaq-update-submodules.sh` fetches every submodule,
+fast-forwards only what can be safely advanced (skipping anything with local
+changes or diverged history), and commits the resulting pointer bumps in one
+reviewable commit:
 
 ```bash
-git submodule update --remote --merge
+./mu2edaq-update-submodules.sh                       # all submodules
+./mu2edaq-update-submodules.sh mu2edaq-controlcenter # just one
+./mu2edaq-update-submodules.sh --dry-run             # preview only
+git push
 ```
 
-To update a single submodule:
+A man page is also available: `man ./man/man1/mu2edaq-update-submodules.1`
+
+`mu2edaq-bootstrap.sh update`/`bump` (above) offers the same workflow with
+plain merges instead of fast-forward-only, useful when a submodule branch
+needs an actual merge commit. Both ultimately do what the raw git commands
+below do:
 
 ```bash
-git submodule update --remote --merge mu2edaq-<name>
-```
+git submodule update --remote --merge                      # all submodules
+git submodule update --remote --merge mu2edaq-<name>        # a single one
 
-After updating, commit the new submodule pointers in the parent repo:
-
-```bash
 git add mu2edaq-<name>   # or: git add -u
 git commit -m "Update mu2edaq-<name> to latest"
 git push
@@ -159,3 +171,28 @@ git rm <local-directory>
 git commit -m "Remove <local-directory> submodule"
 git push
 ```
+
+## Tagging a release
+
+`mu2edaq-tag-release.sh` creates (or renames, or lists) an annotated tag
+across every submodule and the parent repo. See
+[TAGGING-HOWTO.md](TAGGING-HOWTO.md) for the full workflow and tag naming
+convention, or `man ./man/man1/mu2edaq-tag-release.1`.
+
+## Compatibility-test harness
+
+`mu2edaq-build-all.sh` / `mu2edaq-test-all.sh` build, install, and test every
+`mu2edaq-*` package on the current platform, and `mu2edaq-setup-env.sh` is a
+sourceable helper for working interactively with the venvs/builds they
+produce:
+
+```bash
+./mu2edaq-build-all.sh                 # build/install everything
+./mu2edaq-test-all.sh                  # test everything, write .compat/report.md
+source mu2edaq-setup-env.sh <package>  # activate a package's venv + build PATH
+```
+
+See [testing/README.md](testing/README.md) for the full manifest-driven
+harness (per-package build/test behavior, environment knobs, how to add a
+package), or the man pages: `man ./man/man1/mu2edaq-build-all.1`,
+`man ./man/man1/mu2edaq-test-all.1`, `man ./man/man1/mu2edaq-setup-env.1`.

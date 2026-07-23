@@ -1,0 +1,98 @@
+.TH MU2EDAQ\-SETUP\-ENV 1 "2026-07-23" "Mu2e DAQ" "Mu2e DAQ Manual"
+.SH NAME
+mu2edaq\-setup\-env \- activate a compatibility-test package's venv and build PATH in the current shell
+.SH SYNOPSIS
+.B source mu2edaq\-setup\-env.sh
+.RI [ package " | " \-\-list ]
+.SH DESCRIPTION
+.B mu2edaq\-setup\-env.sh
+is a helper for working interactively with the venvs and CMake build
+directories produced by
+.BR mu2edaq\-build\-all.sh .
+It must be
+.B sourced,
+not executed, because it modifies the calling shell's environment
+.RB ( PATH ", " QT_QPA_PLATFORM ,
+and venv activation state); running it as
+.I ./mu2edaq\-setup\-env.sh
+has no effect on the parent shell.
+.PP
+Given a package name, it activates that package's Python virtual
+environment (if one exists under
+.IR .compat/venvs/<package> )
+and prepends any CMake build output directories for that package (if any
+exist under
+.IR .compat/build/<package> " or " .compat/build/<package>\-\-* )
+to
+.BR PATH ,
+so built binaries and installed console scripts are runnable directly
+by name.
+.PP
+Called with no argument, or with
+.BR \-\-list ,
+it does not modify the environment; it only prints what venvs and CMake
+build directories are currently available.
+.SH ARGUMENTS
+.TP
+.I package
+Name of a package under
+.I .compat/venvs
+and/or
+.IR .compat/build ,
+e.g.\&
+.BR mu2edaq\-fts .
+A trailing slash is stripped, so shell tab-completion on the directory
+listing works unmodified.
+.TP
+.B \-\-list
+List the venvs and CMake build directories currently present instead of
+activating anything. This is also what happens when no argument is given.
+.SH ENVIRONMENT
+.TP
+.B MU2EDAQ_COMPAT_DIR
+Root directory the script searches for venvs and build output. Default:
+.IR <repo\-root>/.compat ,
+matching
+.BR mu2edaq\-build\-all.sh .
+.PP
+On successful activation the script exports:
+.TP
+.B PATH
+Prefixed with the package's venv
+.I bin/
+directory (via the venv's own
+.I activate
+script) and, if present, its CMake build director(ies).
+.TP
+.B QT_QPA_PLATFORM
+Left as-is if already set in the environment, otherwise exported empty so
+Qt/GUI binaries launched from the shell pick the normal windowed platform
+plugin (unlike the test harness, which forces
+.BR offscreen ).
+.SH EXAMPLES
+See what has been built so far:
+.EX
+    source mu2edaq\-setup\-env.sh \-\-list
+.EE
+Activate a package's venv and PATH, then run its CLI directly:
+.EX
+    source mu2edaq\-setup\-env.sh mu2edaq\-fts
+    python mu2edaq_fts.py \-\-help
+.EE
+Activate a CMake-built package and run the built binary by name:
+.EX
+    source mu2edaq\-setup\-env.sh mu2edaq\-trigger\-scalers
+    mu2edaq\-trigger\-scalers \-\-help
+.EE
+.SH NOTES
+Nothing happens (silently) if the named package has neither a venv nor a
+build directory yet \(em run
+.B mu2edaq\-build\-all.sh
+for that package first.
+.SH SEE ALSO
+.BR mu2edaq\-build\-all (1),
+.BR mu2edaq\-test\-all (1)
+.SH REPOSITORY
+.UR https://github.com/Mu2e/mu2edaq-main
+https://github.com/Mu2e/mu2edaq-main
+.UE

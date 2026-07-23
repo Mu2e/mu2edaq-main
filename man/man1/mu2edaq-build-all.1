@@ -1,0 +1,124 @@
+.TH MU2EDAQ\-BUILD\-ALL 1 "2026-07-23" "Mu2e DAQ" "Mu2e DAQ Manual"
+.SH NAME
+mu2edaq\-build\-all \- build and install every mu2edaq\-* package for compatibility testing
+.SH SYNOPSIS
+.B mu2edaq\-build\-all.sh
+.RB [ \-\-combined ]
+.RB [ \-\-clean ]
+.RI [ package\ ... ]
+.SH DESCRIPTION
+.B mu2edaq\-build\-all.sh
+builds and installs every package listed in the compatibility-test manifest
+(\c
+.BR testing/common.sh )
+so that
+.BR mu2edaq\-test\-all.sh
+can exercise them afterwards. It is part of the
+.B mu2edaq\-main
+compatibility-test harness and is run from the root of the meta-repository.
+.PP
+Python packages each get an isolated virtual environment under
+.IR .compat/venvs/<pkg> ,
+built with the package's
+.I requirements.txt
+and, where a
+.I pyproject.toml
+declares one, an editable install. Sibling packages that are not published
+(e.g.\&
+.BR mu2edaq\-discovery )
+are installed into a dependent package's venv from the local checkout first.
+CMake-based packages are configured and built under
+.IR .compat/build/<pkg> .
+.PP
+The script keeps going after a failure in one package so that a single run
+reports the status of the whole suite, and exits non-zero if any package
+failed.
+.SH ARGUMENTS
+.TP
+.RI [ package\ ... ]
+Build only the named package(s) instead of the full manifest. Unknown names
+are skipped with a warning.
+.SH OPTIONS
+.TP
+.B \-\-combined
+After building each package individually, additionally install every
+package's
+.I requirements.txt
+into one shared venv
+.RI ( .compat/venvs/_combined )
+and run
+.B pip check
+against it. This surfaces cross-package dependency conflicts that per-package
+venvs cannot reveal.
+.TP
+.B \-\-clean
+Remove
+.I .compat/venvs
+and
+.I .compat/build
+before building, forcing every venv and CMake build directory to be recreated
+from scratch.
+.TP
+.BR \-h ", " \-\-help
+Print a usage summary and exit.
+.SH OUTPUT
+.TP
+.B .compat/status/build.tsv
+One row per build step per package:
+.IR pkg ", " step ", " "PASS/FAIL/SKIP" ", " logfile ", " timestamp .
+Reset at the start of every run.
+.TP
+.B .compat/logs/build/
+Full command output for every step, one log file per package/step.
+.TP
+.B .compat/venvs/<pkg>/
+Per-package Python virtual environment (Python packages only).
+.TP
+.B .compat/build/<pkg>[\-\-<subdir>]/
+Per-package CMake build directory (CMake packages only; the
+.RI \-\- <subdir>
+suffix is used for packages whose CMake project lives in a subdirectory,
+e.g.\&
+.IR cpp/ ).
+.SH ENVIRONMENT
+.TP
+.B MU2EDAQ_PYTHON
+Interpreter used to create venvs. Default:
+.BR python3 .
+.TP
+.B MU2EDAQ_COMPAT_DIR
+Root directory for all harness artifacts. Default:
+.IR <repo\-root>/.compat .
+.SH EXIT STATUS
+.TP
+.B 0
+Every requested package built successfully.
+.TP
+.B non-zero
+At least one package failed to build; the failing package names are printed
+and recorded in
+.BR build.tsv .
+.SH EXAMPLES
+Build and install everything:
+.EX
+    ./mu2edaq\-build\-all.sh
+.EE
+Build everything and also check for cross-package pip conflicts:
+.EX
+    ./mu2edaq\-build\-all.sh \-\-combined
+.EE
+Wipe all venvs/builds and start over:
+.EX
+    ./mu2edaq\-build\-all.sh \-\-clean
+.EE
+Build just one package:
+.EX
+    ./mu2edaq\-build\-all.sh mu2edaq\-fts
+.EE
+.SH SEE ALSO
+.BR mu2edaq\-test\-all (1),
+.BR mu2edaq\-setup\-env (1)
+.SH REPOSITORY
+.UR https://github.com/Mu2e/mu2edaq-main
+https://github.com/Mu2e/mu2edaq-main
+.UE

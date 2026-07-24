@@ -17,8 +17,9 @@ in the appendix.
 
 ## Bottom line
 
-All **22** `mu2edaq-*` packages build and install on this platform. Of 114
-test-phase checks, **95 pass, 18 skip (not applicable), 1 fails**.
+All **23** `mu2edaq-*` packages build and install on this platform. Of 120
+test-phase checks, **101 pass, 18 skip (not applicable), 1 fails**. The build
+phase is 74 pass / 3 skip / 0 fail, including the combined-venv conflict check.
 
 The single failure is `mu2edaq-phone-notification-system`'s pytest suite
 (1 of 89 tests) and is a test-isolation defect, not a platform incompatibility.
@@ -27,7 +28,7 @@ Three findings from this run needed fixes to the harness itself, and one of
 them invalidates part of the previous (2026-07-02) report — see "Corrections to
 the previous report".
 
-### Fixes applied in this branch (uncommitted, in the submodule working trees)
+### Fixes applied (committed on branch `al9-compat-fixes`, merged to `main`)
 
 | # | Repo(s) | Change |
 |---|---|---|
@@ -36,11 +37,11 @@ the previous report".
 | 3 | controlcenter, dashboard, diskwatcher, fts | Added the suite's best-effort discovery-install block; dashboard/diskwatcher/fts now fail loudly instead of reporting success over a failed `pip install`. |
 | 3b | mu2edaq-discovery | Metadata moved from a PEP 621 `[project]` table to declarative `setup.cfg`, build floor lowered to `setuptools>=40.8.0`, so it builds with the setuptools 53 in a stock AL9 venv instead of producing an `UNKNOWN` package. |
 | 4 | mu2edaq-cluster-tools | `pythonpath = src` in `pytest.ini` + README "Running the tests"; the suite runs from an uninstalled checkout again (152 tests). |
-| 5 | mu2edaq-main (harness) | 3 missing packages added to `pkg_list`; `smoke_imports.py` case/extras handling; `build_combined` installs siblings first; `mu2edaq_discovery` import-checked in all 14 consumer venvs. |
+| 5 | mu2edaq-main (harness) | 4 missing packages added to `pkg_list`; `smoke_imports.py` case/extras handling; `build_combined` installs siblings first; `mu2edaq_discovery` import-checked in all 14 consumer venvs. |
 
 Re-verified after these changes with a full `--clean --combined` rebuild plus a
-complete test pass: build 70 PASS / 3 SKIP / 0 FAIL, tests 95 PASS / 18 SKIP /
-1 FAIL (unchanged — the APNs test defect above).
+complete test pass across all 23 packages: build 74 PASS / 3 SKIP / 0 FAIL,
+tests 101 PASS / 18 SKIP / 1 FAIL (the APNs test defect above).
 
 ## Corrections to the previous report
 
@@ -69,7 +70,7 @@ suite was actually exercised on this AL9 node:
    for mu2edaq-discovery`), and the harness then ran `pip check` against the
    resulting *empty* venv and recorded PASS, masking it. `build_combined` now
    installs sibling checkouts before the resolve. With that fix the claim does
-   hold: all 22 requirement sets co-install into one venv with `pip check`
+   hold: all 23 requirement sets co-install into one venv with `pip check`
    clean (PyQt5 + PyQt6 + PySide6 + Django + fastapi + flask coexist, no
    version-pin conflicts).
 
@@ -77,16 +78,16 @@ suite was actually exercised on this AL9 node:
 
 | Package | Version | Build | Deps import | CLI smoke | pytest | ctest |
 |---|---|---|---|---|---|---|
-| mu2edaq-bigredbox | rc-6-ga106390 | venv ✓ | PyQt5 ✓ | – | – | – |
+| mu2edaq-bigredbox | rc-15-gc557be3 | venv ✓ | PyQt5 ✓ | – | – | – |
 | mu2edaq-CFOControl | rc-2-g6355fda | (scripts) | – | – | – | – |
-| mu2edaq-cluster-tools | rc-10-g7816620 | venv+editable ✓ | textual ✓ | ssh-selector, lan-scan ✓ | 152 ✓ | – |
+| mu2edaq-cluster-tools | rc-11-g905d344 | venv+editable ✓ | textual ✓ | ssh-selector, lan-scan ✓ | 152 ✓ | – |
 | mu2edaq-controlcenter | rc-3-g810ced7 | venv ✓ | PyQt6+WebEngine ✓ | – | – | – |
 | mu2edaq-controlroom | rc-4-g076de7a | venv ✓ (krb5 compiles) | ✓ | – | 2 ✓ | – |
 | mu2edaq-controlroom-setup | rc-1-gb72c0f0 | venv+editable ✓ | ✓ | crs-tunnel, crs-remote ✓ | 42 ✓ (1 xfail) | – |
 | mu2edaq-dashboard | rc-3-gb5efe0f | venv ✓ + cmake ✓ | zmq/flask ✓ | ✓ | – | – |
 | mu2edaq-dataformat-viewer | rc-2-gaa9a951 | venv ✓ + cmake(cpp) ✓ | PyQt6 ✓ | viewer, sender ✓ | – | – |
 | mu2edaq-desktop | rc-1-gd40aa32 | venv+editable ✓ | PyQt6 ✓ | 3 entry points ✓ | 17 ✓ | – |
-| mu2edaq-discovery | rc-7-g89b0910 | venv+editable ✓ | ✓ | mu2edaq-discover ✓ | 29 ✓ | – |
+| mu2edaq-discovery | rc-8-gca8d76c | venv+editable ✓ | ✓ | mu2edaq-discover ✓ | 29 ✓ | – |
 | mu2edaq-diskwatcher | rc-3-gd798f06 | venv ✓ | ✓ | ✓ | – | – |
 | mu2edaq-downtime-logger | rc-2-gcafc76a | venv+editable ✓ | PySide6 ✓ | ✓ | 67 ✓ | – |
 | mu2edaq-fts | rc-2-gcc07964 | venv ✓ (SAML wheels OK) | ✓ incl. onelogin.saml2 | ✓ | 37 ✓ | – |
@@ -95,8 +96,9 @@ suite was actually exercised on this AL9 node:
 | mu2edaq-operations | v1_00_00-161-g3352789 | venv ✓ | ✓ | ✓ | 150 ✓ | – |
 | mu2edaq-phone-notification-system | rc-1-g45dc9e3 | venv+editable ✓ + cmake ✓ | ✓ | server, cli ✓ | **1 fail** / 88 ✓ | (none built) |
 | mu2edaq-resource-manager | rc-2-g541b5f2 | venv ✓ + cmake ✓ | fastapi ✓ | – | – | 1/1 ✓ |
+| mu2edaq-reverse-proxy | a8cc7a2 | venv+editable ✓ | PyQt6/Flask ✓ | mu2edaq-proxy, -server ✓ | 229 ✓ | – |
 | mu2edaq-runlog-db | rc-1-g1f274e0 | venv ✓ | Django ✓ | manage.py check ✓ | – | – |
-| mu2edaq-shifter-tools | rc-1-g4badaae | (scripts) | – | – | – | – |
+| mu2edaq-shifter-tools | rc-2-g4fef244 | (scripts) | – | – | – | – |
 | mu2edaq-snapshot-viewer | rc-1-gc937c06 | venv+editable ✓ | PySide6 ✓ | 3 entry points ✓ | 101 ✓ | – |
 | mu2edaq-trigger-scalers | rc-3-g2bb2b12 | cmake(Qt6) ✓ | – | – | – | – |
 
@@ -245,16 +247,36 @@ The recommendation is to keep the applied fix now and pursue an internal index
 (or PyPI) as the permanent answer, at which point `mu2edaq-discovery` can go
 back into `requirements.txt` as a normal pinned dependency.
 
-## Not yet covered
+## Coverage
 
-`mu2edaq-reverse-proxy` was added to `.gitmodules` after this working tree was
-checked out and is not initialized here, so it is **not** among the 22 packages
-above and was not exercised by this run. It is the last of the four submodules
-the 2026-07-23 revision listed as uncovered; the other three (desktop,
-phone-notification-system, snapshot-viewer) are now in `pkg_list` and tested.
-Adding it should be the same mechanical change: initialize the submodule,
-append it to `pkg_list`, and add manifest cases if it needs an editable install
-or CLI smokes.
+All four submodules the 2026-07-23 revision listed as uncovered — `desktop`,
+`phone-notification-system`, `snapshot-viewer` and `reverse-proxy` — are now in
+`pkg_list` and exercised. `mu2edaq-reverse-proxy` was registered as a tracked
+submodule after this working tree was created; it has been initialized, added
+to the manifest, and passes all six checks (229 pytest tests). Every
+`mu2edaq-*` submodule in `.gitmodules` is now covered by the harness.
+
+### Intermittent: reverse-proxy GUI test segfault
+
+On its **first** run after install, `mu2edaq-reverse-proxy`'s suite died with a
+segmentation fault in
+`tests/test_gui.py::test_toolbar_toggle_does_not_disturb_existing_proxies`,
+inside `_settle()`'s `app.processEvents()` loop:
+
+```
+tests/test_gui.py ...............Fatal Python error: Segmentation fault
+Current thread ...:
+  File ".../tests/test_gui.py", line 50 in _settle
+  File ".../tests/test_gui.py", line 207 in test_toolbar_toggle_does_not_disturb_existing_proxies
+```
+
+That is the exact hazard `_settle`'s own docstring documents — Qt frees the
+worker objects once their thread finishes, so touching a wrapper whose C++ side
+has gone segfaults rather than raising. It has **not** recurred in 30
+subsequent runs (25 direct, 3 file-scoped, 2 through the harness), and the test
+passes in isolation, so it is a rare race rather than a blocker. Recorded here
+because a segfault in a test suite is worth tracking even at low frequency; not
+filed as an issue.
 
 ## Platform notes
 

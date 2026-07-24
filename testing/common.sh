@@ -40,6 +40,7 @@ mu2edaq-kpp-scripts
 mu2edaq-operations
 mu2edaq-phone-notification-system
 mu2edaq-resource-manager
+mu2edaq-reverse-proxy
 mu2edaq-runlog-db
 mu2edaq-shifter-tools
 mu2edaq-snapshot-viewer
@@ -65,6 +66,7 @@ pkg_editable_spec() {
     mu2edaq-desktop)            echo ".[test]" ;;
     mu2edaq-downtime-logger)    echo ".[dev]" ;;
     mu2edaq-phone-notification-system) echo ".[dev]" ;;
+    mu2edaq-reverse-proxy)      echo ".[dev,yaml,gui,server]" ;;
     mu2edaq-snapshot-viewer)    echo ".[gui,test]" ;;
     *) echo "" ;;
   esac
@@ -87,6 +89,7 @@ pkg_sibling_deps() {
     mu2edaq-heartbeatmonitor)  echo "mu2edaq-discovery" ;;
     mu2edaq-phone-notification-system) echo "mu2edaq-discovery" ;;
     mu2edaq-resource-manager)  echo "mu2edaq-discovery" ;;
+    mu2edaq-reverse-proxy)     echo "mu2edaq-discovery" ;;
     mu2edaq-runlog-db)         echo "mu2edaq-discovery" ;;
     mu2edaq-snapshot-viewer)   echo "mu2edaq-discovery" ;;
     *) echo "" ;;
@@ -118,6 +121,7 @@ pkg_pytest_dir() {
     mu2edaq-fts)                echo "tests" ;;
     mu2edaq-operations)         echo "tests" ;;
     mu2edaq-phone-notification-system) echo "tests" ;;
+    mu2edaq-reverse-proxy)      echo "tests" ;;
     mu2edaq-snapshot-viewer)    echo "tests" ;;
     *) echo "" ;;
   esac
@@ -155,6 +159,8 @@ pkg_cli_smokes() {
       printf '%s\n' "mu2edaq-app --help" "mu2edaq-desktop-icons --help" "mu2edaq-launchpad --help" ;;
     mu2edaq-phone-notification-system)
       printf '%s\n' "mu2edaq-notify-server --help" "mu2edaq-notify --help" ;;
+    mu2edaq-reverse-proxy)
+      printf '%s\n' "mu2edaq-proxy --help" "mu2edaq-proxy-server --help" ;;
     mu2edaq-snapshot-viewer)
       printf '%s\n' "mu2edaq-snapshot-server --help" "mu2edaq-snapshot-client --help" \
                     "mu2edaq-snapshot-admin --help" ;;
@@ -182,6 +188,7 @@ pkg_import_smokes() {
     mu2edaq-desktop)            echo "mu2edaq_desktop$extra" ;;
     mu2edaq-downtime-logger)    echo "downtime_logger$extra" ;;
     mu2edaq-phone-notification-system) echo "mu2edaq_notify$extra" ;;
+    mu2edaq-reverse-proxy)      echo "mu2edaq_reverse_proxy$extra" ;;
     mu2edaq-snapshot-viewer)    echo "mu2edaq_snapshot_client mu2edaq_snapshot_server$extra" ;;
     *) echo "${extra# }" ;;
   esac

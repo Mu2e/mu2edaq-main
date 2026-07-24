@@ -112,3 +112,6 @@
 [submodule "mu2edaq-desktop"]
 	path = mu2edaq-desktop
 	url = git@github.com:Mu2e/mu2edaq-desktop.git
+[submodule "mu2edaq-reverse-proxy"]
+	path = mu2edaq-reverse-proxy
+	url = git@github.com:Mu2e/mu2edaq-reverse-proxy.git

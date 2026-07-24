@@ -56,3 +56,7 @@ functions (`pkg_editable_spec`, `pkg_cmake_dirs`, `pkg_pytest_dir`,
 Environment knobs: `MU2EDAQ_PYTHON` (interpreter for venvs, default
 `python3`), `MU2EDAQ_COMPAT_DIR` (artifact dir), `MU2EDAQ_SMOKE_TIMEOUT`,
 `MU2EDAQ_PYTEST_TIMEOUT`.
+
+Man pages: `man ../man/man1/mu2edaq-build-all.1`,
+`man ../man/man1/mu2edaq-test-all.1`, `man ../man/man1/mu2edaq-setup-env.1`
+(paths relative to this directory; from the repo root drop the `../`).

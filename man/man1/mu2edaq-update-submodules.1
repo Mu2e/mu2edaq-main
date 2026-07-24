@@ -1,0 +1,137 @@
+.TH MU2EDAQ\-UPDATE\-SUBMODULES 1 "2026-07-23" "Mu2e DAQ" "Mu2e DAQ Manual"
+.SH NAME
+mu2edaq\-update\-submodules \- fetch and fast-forward every submodule, then commit the pointer bumps
+.SH SYNOPSIS
+.B mu2edaq\-update\-submodules.sh
+.RB [ \-\-dry\-run ]
+.RB [ \-\-no\-commit ]
+.RB [ \-\-no\-edit ]
+.RI [ submodule\-path\ ... ]
+.SH DESCRIPTION
+.B mu2edaq\-update\-submodules.sh
+fetches every submodule of the
+.B mu2edaq\-main
+meta-repository from its remote, fast-forwards each one that can be safely
+advanced, and commits the resulting pointer changes in the parent repository
+using the "Bump ..." message convention already used in this repo's history.
+.PP
+It is safe to run from a detached HEAD, from inside
+.BR mu2edaq\-main ,
+or from inside any submodule: each submodule is moved onto the branch it was
+already tracking, or the remote's default branch if it was detached, before
+being fast-forwarded. Submodules with local changes or history that has
+diverged from
+.RI origin/ branch
+are left untouched and reported, never merged or rebased.
+.PP
+Unlike
+.BR "mu2edaq\-bootstrap.sh update" ,
+which unconditionally merges the remote tracking branch, this script only
+ever fast-forwards, skips anything it cannot advance safely, and produces one
+commit summarizing exactly which submodules moved and by how many commits.
+.SH ARGUMENTS
+.TP
+.RI [ submodule\-path\ ... ]
+Restrict the update to one or more submodules, named by the path shown in
+.BR "git submodule status" .
+With no arguments, every submodule is considered.
+.SH OPTIONS
+.TP
+.B \-\-dry\-run
+Fetch only; report which submodules have commits available without changing
+any checkout, staging anything, or committing.
+.TP
+.B \-\-no\-commit
+Update and stage the affected submodule checkouts but stop short of
+committing. Prints the
+.B git commit
+command to run afterwards.
+.TP
+.B \-\-no\-edit
+Commit with the automatically generated message as-is instead of opening
+.BR $EDITOR .
+.TP
+.BR \-h ", " \-\-help
+Print a usage summary and exit.
+.SH BEHAVIOR
+.SS Selecting a branch
+For each submodule already on a branch, that branch is fetched and
+fast-forwarded. For a submodule in detached HEAD state, the script determines
+the remote's default branch (via
+.B origin/HEAD
+if recorded, otherwise
+.B "git ls\-remote \-\-symref origin HEAD" ,
+falling back to
+.BR main )
+and checks that branch out, tracking
+.RI origin/ branch ,
+before fast-forwarding.
+.SS Skip conditions
+A submodule is left untouched, with a one-line reason printed, when: it is
+not initialized; it has local uncommitted changes; its fetch fails; the
+remote has no
+.RI origin/ branch
+matching the branch selected above; or the local branch has diverged from
+.RI origin/ branch
+such that a fast-forward merge is not possible.
+.SS Commit message
+When one submodule is bumped, the commit message is
+.RI \(lq "Bump <name>: <branch>, <n> commit(s)" \(rq .
+When several are bumped in one run, the message is a summary line followed
+by one indented line per submodule, in the same format.
+.SS Detached parent HEAD
+If
+.B mu2edaq\-main
+itself is in detached HEAD state, a warning is printed before any work
+starts: a bump commit created here will not be reachable from a branch until
+you
+.BR "git checkout \-b <name>" .
+.SH EXIT STATUS
+.TP
+.B 0
+The run completed (including the case where every submodule was already
+up to date).
+.TP
+.B non-zero
+Not run inside a git repository, or a later
+.B git commit
+failed.
+.SH EXAMPLES
+Preview what would change across the whole suite:
+.EX
+    ./mu2edaq\-update\-submodules.sh \-\-dry\-run
+.EE
+Update everything and commit with the generated message:
+.EX
+    ./mu2edaq\-update\-submodules.sh
+.EE
+Update just one submodule:
+.EX
+    ./mu2edaq\-update\-submodules.sh mu2edaq\-controlcenter
+.EE
+Stage the bump but write the commit message yourself later:
+.EX
+    ./mu2edaq\-update\-submodules.sh \-\-no\-commit
+    git commit
+.EE
+Non-interactive commit (no editor), e.g. from a script or cron job:
+.EX
+    ./mu2edaq\-update\-submodules.sh \-\-no\-edit
+.EE
+.SH FILES
+.TP
+.B .gitmodules
+Defines the submodule paths and remote URLs used by this script.
+Located at the root of the
+.B mu2edaq\-main
+repository.
+.SH SEE ALSO
+.BR mu2edaq\-bootstrap (1),
+.BR mu2edaq\-tag\-release (1),
+.BR git (1),
+.BR git\-submodule (1),
+.BR git\-merge (1)
+.SH REPOSITORY
+.UR https://github.com/Mu2e/mu2edaq-main
+https://github.com/Mu2e/mu2edaq-main
+.UE

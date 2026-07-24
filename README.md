@@ -1,6 +1,37 @@
 # mu2edaq-main
 
-Top-level meta-repository for the Mu2e DAQ software suite. Each subdirectory is a git submodule pointing to an independent repository in the [Mu2e GitHub organization](https://github.com/Mu2e).
+This is the top-level meta-repo for the Mu2e DAQ software suite.  The purpose of this repo is to make it easy to checkout and manage the entire suite of DAQ software in a consistent manner.  
+
+This is also the basis of how we are going releases.  Basically the releases are specific tags of this repo which then propagate down to the submodule (and hence to the different individual repos). The other advantage of this approach is that development on the head of a package doesn't screw up the main release (since this main is tied to specific hashes of the submodules)
+
+HOWEVER....if you haven't worked with a package organization like this, it can be a little confusing to do the right checkouts and updates.  So there are some helper scripts that assist with all the GIT magic that needs to happen to do this.
+
+The main script for working with the updates is the boostrap script.  This has a bunch of functions, so look at the instructions later in this file for the actual examples.  There are also scripts for building and testing the release, tagging releases and doing updates to submodules.  Against see the instructions later on.
+
+So what's in this.....everything.  In the most general sense the organization is as follows:
+
+* Mu2e Artdaq components (core artdaq readouts, data overlays etc...). These packages are prefixed as "artdaq-xxxx-xxxx"
+* OTSDAQ componeonts (the run control, configuration etc....).  These packages are prefixed as "otsdaq-xxxx-xxxx"
+* Everything else.  These packages are prefixed as "mu2edaq-xxxx-xxxx"
+
+## Things to Know
+
+The code stack is mainly a combination of C/C++ and Python.  There is a spack build system for most of it, but not everything requires spack to build and run (i.e. most python packages don't really require a spack run time).   The python methodology that is used is based on Python virtual environments (venv) and esssentially each submodule/repo is setup to have it's own venv area so that it can handle dependancies correctly and pieces can run stand alone.
+
+The scripting that wraps around the code stack is a combination of bash and python.  This provides a robust harness to build, test and run everything.  We try to make everything work off of configuration, so the majority of scripts and harnesses do NOT (and please don't add) hardcoded values in them.  Instead scripts will always do the following:
+
+1. Provide sensible defaults (which will let most things run, but not do anything exciting)
+2a. Look for config files (we like yaml, so you will see lots of yaml)
+2b. Look for config values in the environment
+2c. Override defaults with values from configs or environment
+3a. Take most config values on the commandline
+3b. Overide defaults and file based config values with values passed on the commandline 
+
+So the ordering is:
+```
+defaults < environment < config file < commandline
+```
+Unless specified otherwise.
 
 ## Submodules
 
@@ -62,7 +93,9 @@ git submodule update --init --recursive
 
 ## Bootstrap script
 
-`mu2edaq-bootstrap.sh` is a helper script that wraps common submodule workflows into four commands. Run it from the root of the repository.
+Getting started can be tricky if you don't have help.  So....
+
+`mu2edaq-bootstrap.sh` is a helper script that wraps common submodule workflows into four commands. Run it from the root of the repository to act on the rest of the repos.  The most common things you will do are clone and update.
 
 ```
 Usage: mu2edaq-bootstrap.sh <command>

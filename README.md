@@ -100,6 +100,33 @@ git push
 
 A man page is also available: `man ./man/man1/mu2edaq-bootstrap.1`
 
+## Installing mu2edaq-discovery
+
+`mu2edaq-discovery` is stdlib-only and is **not published on PyPI**, so it
+cannot be named in a `requirements.txt` — doing so makes pip abort the whole
+file. The consuming apps import it lazily and run fine without it (auto-discovery
+simply stays off), so it is installed separately when you want that feature:
+
+```bash
+source <your-venv>/bin/activate
+./mu2edaq-install-discovery.sh              # from the sibling checkout
+```
+
+For nodes without network access, build a wheelhouse once on a machine that has
+it, copy the directory over, and install from there:
+
+```bash
+./mu2edaq-install-discovery.sh --build-wheel --wheel-dir /path/to/wheelhouse
+# ... copy /path/to/wheelhouse to the offline node ...
+./mu2edaq-install-discovery.sh --wheel-dir /path/to/wheelhouse
+```
+
+Building from source works with the setuptools that a stock AlmaLinux 9 venv
+ships (53), but still needs the `wheel` package. AL9 has it system-wide, so
+creating the venv with `python3 -m venv --system-site-packages` makes the source
+build fully offline; otherwise use the wheelhouse. Use `--python` to target a
+specific interpreter and `--editable` for a development install.
+
 ## Updating submodules
 
 To pull the latest commits for all submodules:

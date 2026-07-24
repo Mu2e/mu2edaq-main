@@ -31,15 +31,18 @@ mu2edaq-controlroom
 mu2edaq-controlroom-setup
 mu2edaq-dashboard
 mu2edaq-dataformat-viewer
+mu2edaq-desktop
 mu2edaq-diskwatcher
 mu2edaq-downtime-logger
 mu2edaq-fts
 mu2edaq-heartbeatmonitor
 mu2edaq-kpp-scripts
 mu2edaq-operations
+mu2edaq-phone-notification-system
 mu2edaq-resource-manager
 mu2edaq-runlog-db
 mu2edaq-shifter-tools
+mu2edaq-snapshot-viewer
 mu2edaq-trigger-scalers
 EOF
 }
@@ -57,8 +60,12 @@ pkg_needs_venv() {
 pkg_editable_spec() {
   case "$1" in
     mu2edaq-discovery)          echo ".[dev,yaml]" ;;
+    mu2edaq-cluster-tools)      echo ".[dev]" ;;
     mu2edaq-controlroom-setup)  echo ".[gui,dev]" ;;
+    mu2edaq-desktop)            echo ".[test]" ;;
     mu2edaq-downtime-logger)    echo ".[dev]" ;;
+    mu2edaq-phone-notification-system) echo ".[dev]" ;;
+    mu2edaq-snapshot-viewer)    echo ".[gui,test]" ;;
     *) echo "" ;;
   esac
 }
@@ -78,8 +85,10 @@ pkg_sibling_deps() {
     mu2edaq-downtime-logger)   echo "mu2edaq-discovery" ;;
     mu2edaq-fts)               echo "mu2edaq-discovery" ;;
     mu2edaq-heartbeatmonitor)  echo "mu2edaq-discovery" ;;
+    mu2edaq-phone-notification-system) echo "mu2edaq-discovery" ;;
     mu2edaq-resource-manager)  echo "mu2edaq-discovery" ;;
     mu2edaq-runlog-db)         echo "mu2edaq-discovery" ;;
+    mu2edaq-snapshot-viewer)   echo "mu2edaq-discovery" ;;
     *) echo "" ;;
   esac
 }
@@ -92,6 +101,7 @@ pkg_cmake_dirs() {
     mu2edaq-trigger-scalers)    echo "." ;;
     mu2edaq-dataformat-viewer)  echo "cpp" ;;
     mu2edaq-heartbeatmonitor)   echo "cpp_sender" ;;
+    mu2edaq-phone-notification-system) echo "." ;;
     *) echo "" ;;
   esac
 }
@@ -102,10 +112,13 @@ pkg_pytest_dir() {
     mu2edaq-cluster-tools)      echo "tests" ;;
     mu2edaq-controlroom)        echo "." ;;
     mu2edaq-controlroom-setup)  echo "tests" ;;
+    mu2edaq-desktop)            echo "tests" ;;
     mu2edaq-discovery)          echo "tests" ;;
     mu2edaq-downtime-logger)    echo "tests" ;;
     mu2edaq-fts)                echo "tests" ;;
     mu2edaq-operations)         echo "tests" ;;
+    mu2edaq-phone-notification-system) echo "tests" ;;
+    mu2edaq-snapshot-viewer)    echo "tests" ;;
     *) echo "" ;;
   esac
 }
@@ -136,6 +149,15 @@ pkg_cli_smokes() {
       echo "python node_list.py --help" ;;
     mu2edaq-runlog-db)
       echo "python manage.py check" ;;
+    mu2edaq-cluster-tools)
+      printf '%s\n' "ssh-selector --help" "lan-scan --help" ;;
+    mu2edaq-desktop)
+      printf '%s\n' "mu2edaq-app --help" "mu2edaq-desktop-icons --help" "mu2edaq-launchpad --help" ;;
+    mu2edaq-phone-notification-system)
+      printf '%s\n' "mu2edaq-notify-server --help" "mu2edaq-notify --help" ;;
+    mu2edaq-snapshot-viewer)
+      printf '%s\n' "mu2edaq-snapshot-server --help" "mu2edaq-snapshot-client --help" \
+                    "mu2edaq-snapshot-admin --help" ;;
     *) echo "" ;;
   esac
 }
@@ -143,12 +165,25 @@ pkg_cli_smokes() {
 # Python modules that must import cleanly in the package venv (beyond the
 # automatic requirements.txt scan done by smoke_imports.py). Space separated,
 # usually the package's own importable modules.
+#
+# mu2edaq_discovery is appended automatically for every package that declares
+# it as a sibling dep: it is not on PyPI and so is deliberately absent from
+# requirements.txt, which means smoke_imports.py no longer sees it. Checking it
+# here keeps the local-install path (sibling checkout / wheelhouse) verified.
 pkg_import_smokes() {
+  local extra=""
+  case "$(pkg_sibling_deps "$1")" in
+    *mu2edaq-discovery*) extra=" mu2edaq_discovery" ;;
+  esac
   case "$1" in
     mu2edaq-discovery)          echo "mu2edaq_discovery" ;;
-    mu2edaq-controlroom-setup)  echo "mu2edaq_controlroom_setup" ;;
-    mu2edaq-downtime-logger)    echo "downtime_logger" ;;
-    *) echo "" ;;
+    mu2edaq-cluster-tools)      echo "mu2edaq_cluster_tools$extra" ;;
+    mu2edaq-controlroom-setup)  echo "mu2edaq_controlroom_setup$extra" ;;
+    mu2edaq-desktop)            echo "mu2edaq_desktop$extra" ;;
+    mu2edaq-downtime-logger)    echo "downtime_logger$extra" ;;
+    mu2edaq-phone-notification-system) echo "mu2edaq_notify$extra" ;;
+    mu2edaq-snapshot-viewer)    echo "mu2edaq_snapshot_client mu2edaq_snapshot_server$extra" ;;
+    *) echo "${extra# }" ;;
   esac
 }
 

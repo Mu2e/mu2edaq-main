@@ -1,85 +1,265 @@
 # mu2edaq-* AlmaLinux 9 compatibility report
 
-Run on the primary production platform: AlmaLinux 9.6, system Python 3.9.21,
-gcc 11.5, cmake 3.26.5. Date: 2026-07-02. Harness: `mu2edaq-build-all.sh` /
-`mu2edaq-test-all.sh` (see `testing/README.md`).
+Run on the primary production platform: `mu2e-mgr-01.fnal.gov`, AlmaLinux 9.6
+(Sage Margay), kernel 5.14.0-570.39.1.el9_6, system Python 3.9.21, gcc 11.5.0,
+cmake 3.26.5, glibc 2.34. Date: 2026-07-24. Harness: `mu2edaq-build-all.sh` /
+`mu2edaq-test-all.sh` (see `testing/README.md`). Machine-generated evidence for
+this run is in `.compat/report.md` and `.compat/status/{build,test}.tsv`.
+
+Release under test: `t00.02.00-rc` submodule pointers as checked out on
+2026-07-24 (see "Versions tested" below).
 
 ## Bottom line
 
-All 19 `mu2edaq-*` packages now **build, install, and pass their tests** on
-this platform (67 test-phase checks pass, 0 fail) — after 9 fixes were applied
-across 7 submodules. Before fixes: 1 build failure + 14 test failures. Twelve
-issue drafts documenting everything found are in `issue-drafts/`.
+All **22** `mu2edaq-*` packages build and install on this platform. Of 114
+test-phase checks, **95 pass, 18 skip (not applicable), 1 fails**.
 
-## Matrix (final state)
+The single failure is `mu2edaq-phone-notification-system`'s pytest suite
+(1 of 89 tests) and is a test-isolation defect, not a platform incompatibility.
 
-| Package | Build | Deps import | CLI smoke | pytest | ctest |
-|---|---|---|---|---|---|
-| mu2edaq-bigredbox | venv ✓ | PyQt5 ✓ | – | – | – |
-| mu2edaq-CFOControl | (scripts) | – | – | – | – |
-| mu2edaq-cluster-tools | venv ✓ | textual ✓ | – | ✓ | – |
-| mu2edaq-controlcenter | venv ✓ | PyQt6+WebEngine ✓ | – | – | – |
-| mu2edaq-controlroom | venv ✓ (krb5 compiles) | ✓ | – | ✓ (fixed) | – |
-| mu2edaq-controlroom-setup | venv+editable ✓, sibling discovery ✓ | ✓ | crs-tunnel/crs-remote ✓ | ✓ | – |
-| mu2edaq-dashboard | venv ✓ + cmake ✓ | zmq/flask ✓ | ✓ | – | – |
-| mu2edaq-dataformat-viewer | venv ✓ + cmake(cpp) ✓ | PyQt6 ✓ | ✓ (fixed) | – | – |
-| mu2edaq-discovery | venv+editable ✓ | ✓ | mu2edaq-discover ✓ | ✓ | – |
-| mu2edaq-diskwatcher | venv ✓ | ✓ | ✓ | – | – |
-| mu2edaq-downtime-logger | venv+editable ✓ (fixed) | PySide6 ✓ | ✓ | 67 ✓ | – |
-| mu2edaq-fts | venv ✓ (SAML wheels OK) | ✓ incl. onelogin.saml2 | ✓ | ✓ | – |
-| mu2edaq-heartbeatmonitor | venv ✓ + cmake(cpp_sender) ✓ | ✓ | ✓ (fixed) | – | ✓ |
-| mu2edaq-kpp-scripts | (scripts) | – | – | – | – |
-| mu2edaq-operations | venv ✓ | ✓ | ✓ | ✓ | – |
-| mu2edaq-resource-manager | venv ✓ + cmake ✓ | fastapi ✓ | – | – | – |
-| mu2edaq-runlog-db | venv ✓ | Django ✓ | manage.py check ✓ | – | – |
-| mu2edaq-shifter-tools | (scripts) | – | – | – | – |
-| mu2edaq-trigger-scalers | cmake(Qt6) ✓ | – | – | – | – |
+Three findings from this run needed fixes to the harness itself, and one of
+them invalidates part of the previous (2026-07-02) report — see "Corrections to
+the previous report".
 
-Cross-package check: **all 19 requirement sets co-install into one venv** with
-`pip check` clean (PyQt5 + PyQt6 + PySide6 + Django + fastapi + flask
-coexist). No version-pin conflicts anywhere in the suite.
+### Fixes applied in this branch (uncommitted, in the submodule working trees)
 
-## Fixes applied (uncommitted, in the submodule working trees)
-
-| # | Repo | Change |
+| # | Repo(s) | Change |
 |---|---|---|
-| 1 | mu2edaq-downtime-logger | `requires-python` `>=3.10` → `>=3.9` (no 3.10 features used; 67 tests pass on 3.9) |
-| 2 | mu2edaq-heartbeatmonitor | `from __future__ import annotations` in `heartbeat_monitor.py` (PEP 604 crash on 3.9) |
-| 3 | mu2edaq-dataformat-viewer | same fix in viewer, sender, `config/config.py`; README → 3.9+ |
-| 4 | mu2edaq-controlroom | mechanical py2→py3 port of 7 NOvA-legacy scripts (print/cPickle only) |
-| 5 | mu2edaq-controlroom | `bin/make-data-dirs.sh` → `.py`; fixed missing `+` syntax error; python3 shebang |
-| 6 | mu2edaq-controlroom | `daq-env-tools.py` → `daq_env_tools.py`; import-safe main(); fixed 2 latent bugs; tests now run |
-| 7 | mu2edaq-controlroom, mu2edaq-shifter-tools | 5 unversioned `python` shebangs → `python3` (no `python` binary on AL9) |
-| 8 | mu2edaq-cluster-tools, mu2edaq-resource-manager | README Python 3.10+ claims → 3.9+ (verified) |
-| 9 | mu2edaq-main | added compatibility harness (`mu2edaq-build-all.sh`, `mu2edaq-test-all.sh`, `mu2edaq-setup-env.sh`, `testing/`), `.gitignore` |
+| 1 | 9 packages + downtime-logger | Removed the unresolvable `mu2edaq-discovery` requirement from `requirements.txt` / `[project] dependencies`; replaced with an explanatory comment. `pip install` now works on a clean machine. |
+| 2 | mu2edaq-main | New `mu2edaq-install-discovery.sh`: offline-safe local install (wheelhouse or sibling checkout), plus `--build-wheel` for air-gapped nodes. Documented in the README. |
+| 3 | controlcenter, dashboard, diskwatcher, fts | Added the suite's best-effort discovery-install block; dashboard/diskwatcher/fts now fail loudly instead of reporting success over a failed `pip install`. |
+| 3b | mu2edaq-discovery | Metadata moved from a PEP 621 `[project]` table to declarative `setup.cfg`, build floor lowered to `setuptools>=40.8.0`, so it builds with the setuptools 53 in a stock AL9 venv instead of producing an `UNKNOWN` package. |
+| 4 | mu2edaq-cluster-tools | `pythonpath = src` in `pytest.ini` + README "Running the tests"; the suite runs from an uninstalled checkout again (152 tests). |
+| 5 | mu2edaq-main (harness) | 3 missing packages added to `pkg_list`; `smoke_imports.py` case/extras handling; `build_combined` installs siblings first; `mu2edaq_discovery` import-checked in all 14 consumer venvs. |
 
-macOS remains supported by all fixes: future-imports are version-neutral,
-`requires-python >=3.9` is a relaxation, shebang `python3` is the modern macOS
-convention, and the harness scripts avoid bash-4/GNU-only constructs.
+Re-verified after these changes with a full `--clean --combined` rebuild plus a
+complete test pass: build 70 PASS / 3 SKIP / 0 FAIL, tests 95 PASS / 18 SKIP /
+1 FAIL (unchanged — the APNs test defect above).
 
-## Issues to file (drafts in `issue-drafts/`, most severe first)
+## Corrections to the previous report
 
-1. `01` downtime-logger requires-python blocks AL9 install — **fixed**
-2. `02` heartbeatmonitor PEP 604 crash on 3.9 (contradicts its README) — **fixed**
-3. `03` dataformat-viewer PEP 604 crashes in 3 files — **fixed**
-4. `04` controlroom ships 7 Python-2 NOvA-legacy scripts — **ported**, retire-vs-keep decision open
-5. `05` controlroom make-data-dirs.sh: python-in-.sh + syntax error — **fixed**
-6. `06` controlroom daq-env-tools: untestable + 2 latent bugs — **fixed**
-7. `07` unversioned python shebangs (controlroom, shifter-tools) — **fixed**
-8. `08` README Python-version claims inconsistent with 3.9 reality — **fixed**
-9. `09` suite uses PyQt5+PyQt6+PySide6+C++ Qt simultaneously — recommendation
-10. `10` controlroom-setup requirements.txt/pyproject drift (PyQt6) — proposal
-11. `11` fts SAML build docs outdated (binary wheels now work on AL9) — docs
-12. `12` fts has a complete macOS py3.12 venv committed to git (2,090 files,
-    darwin .so binaries, shebangs pointing at a personal Mac); stray committed
-    bytecode in operations + controlroom — proposal with commands
+The previous revision of this document claimed a 19-package suite with "67
+test-phase checks pass, 0 fail". Three claims in it did not hold up when the
+suite was actually exercised on this AL9 node:
+
+1. **Three packages were never built or tested.** `mu2edaq-desktop`,
+   `mu2edaq-phone-notification-system`, and `mu2edaq-snapshot-viewer` are
+   submodules of this repo but were absent from `pkg_list` in
+   `testing/common.sh`, so "all 19 packages pass" silently excluded them.
+   They are now covered (venv, editable install, sibling `mu2edaq-discovery`,
+   CMake for the notify C++ library, pytest, CLI smokes, import smokes).
+
+2. **The dependency-import check could not have been run on Linux.**
+   `testing/smoke_imports.py` fell back to the declared *distribution* name as
+   the import name, so `Flask` was imported as `Flask`, `Pillow` as `Pillow`,
+   `PyJWT` as `PyJWT`. Those resolve on a case-insensitive filesystem (macOS
+   default) and raise `ModuleNotFoundError` on AL9. It also never stripped
+   extras, so `qrcode[pil]` and `httpx[http2]` were imported literally. Any
+   genuine AL9 run would have reported these. Fixed by normalizing case,
+   stripping extras, and extending the distribution→module map.
+
+3. **The cross-package "one venv, `pip check` clean" claim was not verified.**
+   The combined venv resolve fails outright (`No matching distribution found
+   for mu2edaq-discovery`), and the harness then ran `pip check` against the
+   resulting *empty* venv and recorded PASS, masking it. `build_combined` now
+   installs sibling checkouts before the resolve. With that fix the claim does
+   hold: all 22 requirement sets co-install into one venv with `pip check`
+   clean (PyQt5 + PyQt6 + PySide6 + Django + fastapi + flask coexist, no
+   version-pin conflicts).
+
+## Matrix (this run)
+
+| Package | Version | Build | Deps import | CLI smoke | pytest | ctest |
+|---|---|---|---|---|---|---|
+| mu2edaq-bigredbox | rc-6-ga106390 | venv ✓ | PyQt5 ✓ | – | – | – |
+| mu2edaq-CFOControl | rc-2-g6355fda | (scripts) | – | – | – | – |
+| mu2edaq-cluster-tools | rc-10-g7816620 | venv+editable ✓ | textual ✓ | ssh-selector, lan-scan ✓ | 152 ✓ | – |
+| mu2edaq-controlcenter | rc-3-g810ced7 | venv ✓ | PyQt6+WebEngine ✓ | – | – | – |
+| mu2edaq-controlroom | rc-4-g076de7a | venv ✓ (krb5 compiles) | ✓ | – | 2 ✓ | – |
+| mu2edaq-controlroom-setup | rc-1-gb72c0f0 | venv+editable ✓ | ✓ | crs-tunnel, crs-remote ✓ | 42 ✓ (1 xfail) | – |
+| mu2edaq-dashboard | rc-3-gb5efe0f | venv ✓ + cmake ✓ | zmq/flask ✓ | ✓ | – | – |
+| mu2edaq-dataformat-viewer | rc-2-gaa9a951 | venv ✓ + cmake(cpp) ✓ | PyQt6 ✓ | viewer, sender ✓ | – | – |
+| mu2edaq-desktop | rc-1-gd40aa32 | venv+editable ✓ | PyQt6 ✓ | 3 entry points ✓ | 17 ✓ | – |
+| mu2edaq-discovery | rc-7-g89b0910 | venv+editable ✓ | ✓ | mu2edaq-discover ✓ | 29 ✓ | – |
+| mu2edaq-diskwatcher | rc-3-gd798f06 | venv ✓ | ✓ | ✓ | – | – |
+| mu2edaq-downtime-logger | rc-2-gcafc76a | venv+editable ✓ | PySide6 ✓ | ✓ | 67 ✓ | – |
+| mu2edaq-fts | rc-2-gcc07964 | venv ✓ (SAML wheels OK) | ✓ incl. onelogin.saml2 | ✓ | 37 ✓ | – |
+| mu2edaq-heartbeatmonitor | rc-2-g4c25c26 | venv ✓ + cmake(cpp_sender) ✓ | ✓ | monitor, sender ✓ | – | 20/20 ✓ |
+| mu2edaq-kpp-scripts | rc-1-gb4622f1 | (scripts) | – | – | – | – |
+| mu2edaq-operations | v1_00_00-161-g3352789 | venv ✓ | ✓ | ✓ | 150 ✓ | – |
+| mu2edaq-phone-notification-system | rc-1-g45dc9e3 | venv+editable ✓ + cmake ✓ | ✓ | server, cli ✓ | **1 fail** / 88 ✓ | (none built) |
+| mu2edaq-resource-manager | rc-2-g541b5f2 | venv ✓ + cmake ✓ | fastapi ✓ | – | – | 1/1 ✓ |
+| mu2edaq-runlog-db | rc-1-g1f274e0 | venv ✓ | Django ✓ | manage.py check ✓ | – | – |
+| mu2edaq-shifter-tools | rc-1-g4badaae | (scripts) | – | – | – | – |
+| mu2edaq-snapshot-viewer | rc-1-gc937c06 | venv+editable ✓ | PySide6 ✓ | 3 entry points ✓ | 101 ✓ | – |
+| mu2edaq-trigger-scalers | rc-3-g2bb2b12 | cmake(Qt6) ✓ | – | – | – | – |
+
+Every package also passes `py-compile` under Python 3.9 and `bash -n` on every
+shipped shell script. No PEP 604 / 3.10-only syntax remains anywhere in the
+suite, and every `pyproject.toml` that declares `requires-python` declares
+`>=3.9`.
+
+## Open issues from this run
+
+### Major
+
+1. **`mu2edaq-discovery` was not installable — FIXED in this branch.**
+   Ten packages listed a bare `mu2edaq-discovery` in `requirements.txt`. It is
+   not on PyPI, so the documented install path failed on a clean AL9 machine,
+   with pip aborting the whole resolve and installing *nothing*:
+
+   ```
+   $ pip install -r mu2edaq-dashboard/requirements.txt
+   ERROR: Could not find a version that satisfies the requirement mu2edaq-discovery
+   ERROR: No matching distribution found for mu2edaq-discovery
+   ```
+
+   Filed 2026-07-02 as `Mu2e/mu2edaq-main#4` for four packages, closed
+   2026-07-21 while still reproducible; re-filed with full evidence as
+   `Mu2e/mu2edaq-main#5`. See "The mu2edaq-discovery dependency" below for the
+   fix and the rejected alternatives.
+
+2. **`mu2edaq-phone-notification-system` pytest fails on any clean checkout.**
+   `tests/test_dispatch.py::test_apns_alert_payload_is_plain_visible_notification`
+   constructs `ApnsSender` with the real config, whose `key_file` is
+   `config/apns_key.p8` — a gitignored credential absent from every fresh
+   clone. `ApnsSender.__init__` therefore sets `self.enabled = False`, the test
+   patches `_client`/`_key`/`_token` but never restores `enabled`, and `send()`
+   returns `logged` instead of `sent`. Confirmed the test passes iff that file
+   exists (any content suffices), so it only ever passed on a workstation with
+   a real APNs key.
+
+### Moderate
+
+3. **`mu2edaq-cluster-tools` test suite could not run as documented — FIXED.**
+   Commit `11ad1a8` moved the sources under `src/` (src-layout) but nothing
+   installed the package for tests: `pytest.ini` set no `pythonpath`, and the
+   README had no test section. `pip install -r requirements.txt && pytest` gave
+   `ModuleNotFoundError: No module named 'mu2edaq_cluster_tools'` for all seven
+   test modules. Fixed by adding `pythonpath = src` to `pytest.ini` and a
+   "Running the tests" section to the README; verified from an uninstalled
+   checkout (152 passed). Filed as `Mu2e/mu2edaq-cluster-tools#4`.
+
+4. **C++ tests silently absent for phone-notification-system.** Its CMake
+   project builds, but CppUnit is not installed on this node, so `ctest` reports
+   "No tests were found" and the harness records that as a pass. Either add
+   `cppunit-devel` to the AL9 dependency list or have CMake fail loudly.
+
+### Carried over (unchanged, previously filed)
+
+- `Mu2e/mu2edaq-main#2` — suite uses PyQt5 + PyQt6 + PySide6 + C++ Qt5/Qt6
+  simultaneously; consider standardizing.
+- `Mu2e/mu2edaq-fts#6` — SAML build instructions outdated; manylinux wheels
+  work on AL9, `xmlsec1-devel` etc. are no longer needed.
+- `Mu2e/mu2edaq-fts#7`, `Mu2e/mu2edaq-controlroom#8` — committed virtualenvs
+  and bytecode still in git history.
+- `Mu2e/mu2edaq-fts#8`, `Mu2e/mu2edaq-heartbeatmonitor#8` — bootstrap scripts
+  not location-independent and report success on failure.
+- `Mu2e/mu2edaq-controlroom-setup#4` — requirements.txt / pyproject PyQt6 drift.
+
+## The mu2edaq-discovery dependency
+
+### Why it broke
+
+`mu2edaq-discovery` is stdlib-only, zero-dependency, and **not published on
+PyPI**. Ten `requirements.txt` files named it as a plain requirement, which pip
+cannot resolve — and pip aborts the *entire* file on an unresolvable name, so
+those environments got nothing installed at all, not merely "no discovery".
+
+This contradicted the code: all nine consumers import it lazily inside a
+`try/except Exception`, with comments like *"best-effort so a missing package
+never blocks startup"*. The runtime treats it as optional; only the packaging
+insisted it was mandatory.
+
+### Fix applied
+
+- The bare requirement is removed from all ten `requirements.txt` files and
+  from `mu2edaq-downtime-logger`'s `[project] dependencies`, replaced by a
+  comment explaining why it must not be listed and how to install it.
+  downtime-logger gains a `discovery` extra for the local-install case.
+- `mu2edaq-install-discovery.sh` (new, in this repo) is the supported local
+  install path. It prefers a prebuilt wheel from a wheelhouse (fully offline),
+  otherwise builds from the sibling checkout, and handles the setuptools floor
+  described below. `--build-wheel` produces a wheelhouse to copy to offline
+  nodes.
+- The four bootstrap scripts with no discovery step at all (controlcenter,
+  dashboard, diskwatcher, fts) gained the best-effort block already used by
+  bigredbox/dataformat-viewer/snapshot-viewer, and dashboard/diskwatcher/fts
+  now fail loudly instead of printing "initialized successfully" over a failed
+  `pip install`.
+
+Verified on AL9: `pip install -r requirements.txt` now succeeds in a clean venv
+for all nine previously-broken packages, `pip install .` succeeds for
+downtime-logger, and an end-to-end `bootstrap_diskwatcher.sh` in the submodule
+layout installs both the app dependencies and discovery from the sibling.
+
+### Build toolchain: now works with the stock AL9 setuptools
+
+`mu2edaq-discovery` originally declared PEP 621 `[project]` metadata in
+`pyproject.toml` with `build-system.requires = ["setuptools>=61"]`. A stock AL9
+`python3 -m venv` ships **setuptools 53**, which predates PEP 621 support, so
+`pip install ../mu2edaq-discovery` — the mechanism most bootstrap scripts use —
+either reached out to PyPI for a newer setuptools or, with build isolation
+disabled, built an empty `UNKNOWN` package:
+
+```
+creating /tmp/pip-modern-metadata-.../UNKNOWN.egg-info
+error: invalid command 'bdist_wheel'
+```
+
+Fixed by moving the metadata to declarative `setup.cfg` (read by setuptools
+since 30.3) and lowering the floor to `setuptools>=40.8.0`. `pyproject.toml`
+now carries only `[build-system]`; setup.cfg is the single source of truth, and
+its header says so — adding a `[project]` table back would silently win on
+setuptools >= 61 and let the two drift.
+
+Verified that both toolchains produce the same artifact: wheels built with
+setuptools 53.0.0 and 82.0.1 have an identical 7-file payload, identical
+entry points, and identical `Name`/`Version`/`Requires-Python`/`Provides-Extra`
+metadata. The only difference is where each setuptools generation places the
+license file (`dist-info/LICENSE` vs `dist-info/licenses/LICENSE`).
+
+One residual constraint: building a wheel still needs the `wheel` package in
+the target environment. AL9 ships it system-wide (`python3-wheel`), so
+`python3 -m venv --system-site-packages` picks it up and the build is fully
+offline; a plain venv does not have it. The wheelhouse path avoids the question
+entirely, and `mu2edaq-install-discovery.sh` detects the case and says so.
+
+### Options considered
+
+| Option | No PyPI | Offline | Standalone clone | Verdict |
+|---|---|---|---|---|
+| Drop the hard requirement, install locally (**applied**) | ✓ | ✓ | ✓ | Chosen — matches the guarded runtime imports |
+| `mu2edaq-discovery @ git+https://github.com/...` | ✓ | ✗ | ✓ | Kept only as a bootstrap *fallback*; needs GitHub reachable at install time and a ref to bump each release |
+| Relative path `../mu2edaq-discovery` in requirements.txt | ✓ | partly | ✗ | Rejected — hard-fails standalone clones and resolves relative to CWD, not the file |
+| Vendor a wheel into each consumer repo | ✓ | ✓ | ✓ | Rejected — 1.3 MB duplicated ten times, ten places to re-sync |
+| Publish to PyPI or an internal index | ✗ / infra | ✓ (index) | ✓ | Best long-term; retires all of the above. Needs a policy decision |
+
+The recommendation is to keep the applied fix now and pursue an internal index
+(or PyPI) as the permanent answer, at which point `mu2edaq-discovery` can go
+back into `requirements.txt` as a normal pinned dependency.
 
 ## Platform notes
 
 - Python 3.9 reached upstream EOL in Oct 2025; it remains the AL9 system
   python (RHEL supports it through 2032). The suite standardizes on 3.9+ as
   the floor per the production-platform-first policy.
-- `xmlsec1-devel` etc. are NOT needed for fts anymore (manylinux wheels).
-- All C++ dev dependencies (zeromq, cppzmq, curl, yaml-cpp, Qt5/Qt6 devel)
-  are present on this node; heartbeatmonitor's cpp_sender fetches
-  nlohmann/json at configure time (needs network on first configure).
+- `xmlsec1-devel` and friends are NOT needed for fts (manylinux wheels).
+- All C++ dev dependencies (zeromq, cppzmq, curl, yaml-cpp, Qt5/Qt6 devel) are
+  present on this node. `cppunit-devel` is not.
+- heartbeatmonitor's `cpp_sender` fetches nlohmann/json at configure time, so
+  the first configure needs network access.
+- Qt GUI smokes run with `QT_QPA_PLATFORM=offscreen` under a timeout.
+
+## Reproducing
+
+```bash
+./mu2edaq-build-all.sh --clean --combined
+./mu2edaq-test-all.sh
+cat .compat/report.md
+```
+
+## Versions tested
+
+Submodule pointers as listed in the matrix above; parent repo at `76058d0`
+plus the harness fixes described in "Corrections to the previous report".

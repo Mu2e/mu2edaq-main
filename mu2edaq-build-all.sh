@@ -139,7 +139,19 @@ build_combined() {
   [ -x "$vpy" ] || "$PYTHON" -m venv "$VENV_DIR/_combined" >> "$logf" 2>&1
   run_logged "$logf" "$vpy" -m pip install -q --upgrade pip setuptools wheel || true
 
-  local args="" pkg
+  # Sibling checkouts first: mu2edaq-discovery is not on PyPI, so a bare
+  # `-r requirements.txt` resolve would fail before any conflict is reached.
+  local sibs="" pkg sib
+  for pkg in $(pkg_list); do
+    for sib in $(pkg_sibling_deps "$pkg"); do
+      case " $sibs " in *" $sib "*) ;; *) sibs="$sibs $sib" ;; esac
+    done
+  done
+  for sib in $sibs; do
+    run_logged "$logf" "$vpy" -m pip install -q "$ROOT/$sib" || true
+  done
+
+  local args=""
   for pkg in $(pkg_list); do
     [ -f "$ROOT/$pkg/requirements.txt" ] && args="$args -r $ROOT/$pkg/requirements.txt"
   done

@@ -26,6 +26,12 @@ DIST_TO_MODULE = {
     "ruamel.yaml": "ruamel.yaml",
     "uvicorn[standard]": "uvicorn",
     "backports.zoneinfo": None,  # only needed on <3.9; never on our baselines
+    "pyjwt": "jwt",
+    "pillow": "PIL",
+    "pytest-qt": "pytestqt",
+    "authlib": "authlib",
+    "httpx": "httpx",
+    "qrcode": "qrcode",
 }
 
 
@@ -52,7 +58,17 @@ def module_for(req_line):
     key = dist.lower()
     if key in DIST_TO_MODULE:
         return DIST_TO_MODULE[key]
-    return dist.replace("-", "_")
+    # Extras ("qrcode[pil]") are install-time only and never part of the
+    # import name; strip them before the lookup and the fallback.
+    base = key.split("[", 1)[0]
+    if base in DIST_TO_MODULE:
+        return DIST_TO_MODULE[base]
+    # Fall back to the lowercased name: PyPI distribution names are
+    # case-insensitive but import names are not. Preserving the declared
+    # case ("Flask") resolves anyway on a case-insensitive filesystem
+    # (macOS default) and fails on Linux, so the case must be normalized
+    # here or the check reports platform-dependent false failures.
+    return base.replace("-", "_")
 
 
 def main():

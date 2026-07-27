@@ -26,6 +26,7 @@ mu2edaq-discovery
 mu2edaq-bigredbox
 mu2edaq-CFOControl
 mu2edaq-cluster-tools
+mu2edaq-commandline-tools
 mu2edaq-controlcenter
 mu2edaq-controlroom
 mu2edaq-controlroom-setup
@@ -62,6 +63,7 @@ pkg_editable_spec() {
   case "$1" in
     mu2edaq-discovery)          echo ".[dev,yaml]" ;;
     mu2edaq-cluster-tools)      echo ".[dev]" ;;
+    mu2edaq-commandline-tools)  echo ".[dev]" ;;
     mu2edaq-controlroom-setup)  echo ".[gui,dev]" ;;
     mu2edaq-desktop)            echo ".[test]" ;;
     mu2edaq-downtime-logger)    echo ".[dev]" ;;
@@ -99,6 +101,7 @@ pkg_sibling_deps() {
 # CMake source dirs within the package ('.' = package root). Space separated.
 pkg_cmake_dirs() {
   case "$1" in
+    mu2edaq-commandline-tools)  echo "." ;;
     mu2edaq-dashboard)          echo "." ;;
     mu2edaq-resource-manager)   echo "." ;;
     mu2edaq-trigger-scalers)    echo "." ;;
@@ -113,6 +116,7 @@ pkg_cmake_dirs() {
 pkg_pytest_dir() {
   case "$1" in
     mu2edaq-cluster-tools)      echo "tests" ;;
+    mu2edaq-commandline-tools)  echo "tests" ;;
     mu2edaq-controlroom)        echo "." ;;
     mu2edaq-controlroom-setup)  echo "tests" ;;
     mu2edaq-desktop)            echo "tests" ;;
@@ -155,6 +159,8 @@ pkg_cli_smokes() {
       echo "python manage.py check" ;;
     mu2edaq-cluster-tools)
       printf '%s\n' "ssh-selector --help" "lan-scan --help" ;;
+    mu2edaq-commandline-tools)
+      printf '%s\n' "mu2edaq-tools --help" "mu2edaq-tools list" ;;
     mu2edaq-desktop)
       printf '%s\n' "mu2edaq-app --help" "mu2edaq-desktop-icons --help" "mu2edaq-launchpad --help" ;;
     mu2edaq-phone-notification-system)
@@ -184,6 +190,7 @@ pkg_import_smokes() {
   case "$1" in
     mu2edaq-discovery)          echo "mu2edaq_discovery" ;;
     mu2edaq-cluster-tools)      echo "mu2edaq_cluster_tools$extra" ;;
+    mu2edaq-commandline-tools)  echo "mu2edaq_commandline_tools$extra" ;;
     mu2edaq-controlroom-setup)  echo "mu2edaq_controlroom_setup$extra" ;;
     mu2edaq-desktop)            echo "mu2edaq_desktop$extra" ;;
     mu2edaq-downtime-logger)    echo "downtime_logger$extra" ;;

@@ -46,6 +46,7 @@ Unless specified otherwise.
 | mu2edaq-bigredbox | [Mu2e/mu2edaq-bigredbox](https://github.com/Mu2e/mu2edaq-bigredbox) |
 | mu2edaq-CFOControl | [Mu2e/mu2edaq-CFOControl](https://github.com/Mu2e/mu2edaq-CFOControl) |
 | mu2edaq-cluster-tools | [Mu2e/mu2edaq-cluster-tools](https://github.com/Mu2e/mu2edaq-cluster-tools) |
+| mu2edaq-commandline-tools | [Mu2e/mu2edaq-commandline-tools](https://github.com/Mu2e/mu2edaq-commandline-tools) |
 | mu2edaq-controlcenter | [Mu2e/mu2edaq-controlcenter](https://github.com/Mu2e/mu2edaq-controlcenter) |
 | mu2edaq-controlroom | [Mu2e/mu2edaq-controlroom](https://github.com/Mu2e/mu2edaq-controlroom) |
 | mu2edaq-controlroom-setup | [Mu2e/mu2edaq-controlroom-setup](https://github.com/Mu2e/mu2edaq-controlroom-setup) |

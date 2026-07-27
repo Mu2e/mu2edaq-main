@@ -115,3 +115,6 @@
 [submodule "mu2edaq-reverse-proxy"]
 	path = mu2edaq-reverse-proxy
 	url = git@github.com:Mu2e/mu2edaq-reverse-proxy.git
+[submodule "mu2edaq-commandline-tools"]
+	path = mu2edaq-commandline-tools
+	url = git@github.com:Mu2e/mu2edaq-commandline-tools.git

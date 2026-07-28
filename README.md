@@ -58,6 +58,7 @@ Unless specified otherwise.
 | mu2edaq-downtime-logger | [Mu2e/mu2edaq-downtime-logger](https://github.com/Mu2e/mu2edaq-downtime-logger) |
 | mu2edaq-fts | [Mu2e/mu2edaq-fts](https://github.com/Mu2e/mu2edaq-fts) |
 | mu2edaq-heartbeatmonitor | [Mu2e/mu2edaq-heartbeatmonitor](https://github.com/Mu2e/mu2edaq-heartbeatmonitor) |
+| mu2edaq-config | [Mu2e/mu2edaq-config](https://github.com/Mu2e/mu2edaq-config) |
 | mu2edaq-kpp-scripts | [Mu2e/mu2edaq-kpp-scripts](https://github.com/Mu2e/mu2edaq-kpp-scripts) |
 | mu2edaq-operations | [Mu2e/daq-operations](https://github.com/Mu2e/daq-operations) |
 | mu2edaq-phone-notification-system | [Mu2e/mu2edaq-phone-notification-system](https://github.com/Mu2e/mu2edaq-phone-notification-system) |

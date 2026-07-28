@@ -118,3 +118,6 @@
 [submodule "mu2edaq-commandline-tools"]
 	path = mu2edaq-commandline-tools
 	url = git@github.com:Mu2e/mu2edaq-commandline-tools.git
+[submodule "mu2edaq-config"]
+	path = mu2edaq-config
+	url = git@github.com:Mu2e/mu2edaq-config.git

@@ -21,11 +21,16 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **2 packages were executed end-to-end on Windows.** `mu2edaq-discovery` core:
+- **4 packages were executed end-to-end on Windows.** `mu2edaq-discovery` core:
   **23 passed**. `mu2edaq-diskwatcher`: **275 passed, 6 failed, 12 skipped** —
   every failure is a test that shells out to a `.sh` script via
   `subprocess.run(["bash", <windows-path>])`, where MSYS bash mangles the
-  backslashes; the Python package itself is clean.
+  backslashes; the Python package itself is clean. `mu2edaq-desktop`:
+  **13 passed, 4 failed** (running `.sh` as an executable + installing Linux
+  `.desktop` entries). `mu2edaq-controlroom-setup`: **38 passed, 4 failed,
+  1 xfailed** (Linux `.desktop` generation + ssh ControlMaster socket paths).
+  In every case the package imports cleanly on Windows and the failures are
+  Linux-desktop / bash-script / Unix-ssh features, not logic defects.
 - **1 hard import-time crash** on Windows: `mu2edaq-shifter-tools/open_tunnels.py`
   calls `os.getuid()` at module top level (`AttributeError` on Windows — the
   module cannot be imported at all). **Fixed on this branch.**
@@ -65,10 +70,10 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-config | STATIC | 📜 SCRIPTS | YAML config + 8 bash scripts; no Python. |
 | mu2edaq-controlcenter | STATIC | ⚠️ RUNTIME | PyQt6 + WebEngine GUI, 5 bash scripts. |
 | mu2edaq-controlroom | STATIC | ❌ BROKEN | NOVA-legacy: hardcoded `/home/novadaq/...`, `ssh`, `ps aux`, `os.system("kill ...")`, `klist`/`kinit`. Tunnel & Kerberos features are Unix-only. |
-| mu2edaq-controlroom-setup | STATIC | ⚠️ RUNTIME | SSH VNC tunnels + `klist -s` gate. `ssh` exists on Windows; `klist` is a *different* program on Windows. Tests mock subprocess. |
+| mu2edaq-controlroom-setup | **RAN** | ⚠️ RUNTIME | **38 passed / 4 failed / 1 xfailed.** Failures: Linux `.desktop` generation + ssh ControlMaster socket path (`~/.crs`; Windows `expanduser` ignores `$HOME`, and Windows OpenSSH lacks ControlMaster). `klist -s` gate is Windows-wrong. See #12. |
 | mu2edaq-dashboard | STATIC | 🔧 CMAKE + ⚠️ | Flask dashboard (fine); daemon `os.fork()` **guarded**; C++ sender unbuildable here. |
 | mu2edaq-dataformat-viewer | STATIC | 🔧 CMAKE + ⚠️ | PyQt6 viewer + C++ component (unbuildable here). |
-| mu2edaq-desktop | STATIC | ✅ CLEAN | Generates Linux `.desktop` / macOS `.plist` launchers. Pure Python, imports on Windows; its *output* targets Unix, but it runs. |
+| mu2edaq-desktop | **RAN** | ⚠️ RUNTIME | **13 passed / 4 failed.** Imports clean; failures are executing `.sh` as a program (WinError 193) and installing Linux `.desktop` entries (WinError 2). Launcher-install is Linux-specific. See #12. |
 | mu2edaq-discovery | **RAN** | ✅ CLEAN | **23 passed** on Windows (core: protocol/cli/loopback). GUI test needs Qt/display (excluded). stdlib-only core. |
 | mu2edaq-diskwatcher | **RAN** | ✅ CLEAN | **275 passed / 6 failed / 12 skipped**. All 6 failures = tests invoking `.sh` via `bash <windows-path>` (backslash mangling), not package defects. Daemon `os.fork()` **guarded**. |
 | mu2edaq-downtime-logger | STATIC | ✅ CLEAN | PySide6 GUI app; no Unix-only imports or POSIX paths found in source. |
@@ -138,3 +143,4 @@ Filed on `Mu2e/mu2edaq-main`, each titled with the submodule:
 | [#9](https://github.com/Mu2e/mu2edaq-main/issues/9) | Harness (build-all/test-all/install-discovery) assumes `python3` + `venv/bin` | Open — needs maintainer decision |
 | [#10](https://github.com/Mu2e/mu2edaq-main/issues/10) | diskwatcher CLI tests fail: bash invoked with backslash Windows path | Open |
 | [#11](https://github.com/Mu2e/mu2edaq-main/issues/11) | SSH-tunnel + Kerberos tooling is Unix-only (5 packages) | Open — design decision |
+| [#12](https://github.com/Mu2e/mu2edaq-main/issues/12) | desktop / controlroom-setup: Linux `.desktop` install + ssh ControlMaster fail on Windows | Open — product decision |

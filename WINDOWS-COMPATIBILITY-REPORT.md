@@ -21,7 +21,8 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **6 packages were executed end-to-end on Windows.** `mu2edaq-operations`:
+- **7 packages were executed end-to-end on Windows.** `mu2edaq-cluster-tools`:
+  **151 passed / 1 skipped** (symlink test, fixed). `mu2edaq-operations`:
   **150 passed** (clean). `mu2edaq-runlog-db`: Django `manage.py check` — **no
   issues**. `mu2edaq-discovery` core:
   **23 passed**. `mu2edaq-diskwatcher`: **275 passed, 6 failed, 12 skipped** —
@@ -67,7 +68,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | Bootstrap | STATIC | ⚠️ RUNTIME | Unix-workstation bootstrapper: bash/emacs/vim/gdb dotfiles (N/A on Windows) + `mu2e-ssh-setup.py` (Python, likely runs) with a bash wrapper. |
 | mu2edaq-CFOControl | STATIC | 📜 SCRIPTS | 2 py + 2 sh helper scripts; no packaging/tests. Not import-tested. |
 | mu2edaq-bigredbox | STATIC | ⚠️ RUNTIME (fixed) | PyQt6 alert GUI. Was ❌ via `/tmp` PID/log defaults → **fixed** to `tempfile.gettempdir()`. Daemon lifecycle via bash start/stop scripts. |
-| mu2edaq-cluster-tools | STATIC | ⚠️ RUNTIME | Textual TUI; LAN scan / ssh-selector shell out to `ssh`/scanning tools. Core Python likely imports. |
+| mu2edaq-cluster-tools | **RAN** | ✅ CLEAN | **151 passed / 1 skipped** on Windows. Only skip was a test creating a symlink (needs elevation on Windows) — fixed to skip cleanly (`windows-compat@d82f869`). LAN scan / ssh-selector still shell out to `ssh` at runtime. |
 | mu2edaq-commandline-tools | STATIC | 🔧 CMAKE + ✅ py | Yields `/etc/mu2edaq/...` as a *candidate* config path (skipped if absent — harmless). C++ component unbuildable here. |
 | mu2edaq-config | STATIC | 📜 SCRIPTS | YAML config + 8 bash scripts; no Python. |
 | mu2edaq-controlcenter | STATIC | ⚠️ RUNTIME | PyQt6 + WebEngine GUI, 5 bash scripts. |

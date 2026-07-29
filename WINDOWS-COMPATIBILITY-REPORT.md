@@ -21,7 +21,9 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **7 packages were executed end-to-end on Windows.** `mu2edaq-cluster-tools`:
+- **8 packages were executed end-to-end on Windows.** `mu2edaq-downtime-logger`:
+  **66 passed / 1 failed** (logfile-rotation file lock, #13).
+  `mu2edaq-cluster-tools`:
   **151 passed / 1 skipped** (symlink test, fixed). `mu2edaq-operations`:
   **150 passed** (clean). `mu2edaq-runlog-db`: Django `manage.py check` — **no
   issues**. `mu2edaq-discovery` core:
@@ -79,7 +81,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-desktop | **RAN** | ⚠️ RUNTIME | **13 passed / 4 failed.** Imports clean; failures are executing `.sh` as a program (WinError 193) and installing Linux `.desktop` entries (WinError 2). Launcher-install is Linux-specific. See #12. |
 | mu2edaq-discovery | **RAN** | ✅ CLEAN | **23 passed** on Windows (core: protocol/cli/loopback). GUI test needs Qt/display (excluded). stdlib-only core. |
 | mu2edaq-diskwatcher | **RAN** | ✅ CLEAN | **275 passed / 6 failed / 12 skipped**. All 6 failures = tests invoking `.sh` via `bash <windows-path>` (backslash mangling), not package defects. Daemon `os.fork()` **guarded**. |
-| mu2edaq-downtime-logger | STATIC | ✅ CLEAN | PySide6 GUI app; no Unix-only imports or POSIX paths found in source. |
+| mu2edaq-downtime-logger | **RAN** | ⚠️ RUNTIME | **66 passed / 1 failed** (with `pytest-qt`). Failure: logfile detector holds the file open (blocks rotation, `WinError 32`) and detects rotation via `st_ino` (meaningless on Windows). See #13. Rest of the app clean. |
 | mu2edaq-fts | STATIC | ⚠️ RUNTIME | Daemon **guarded** (`os.name == "nt"` → clean exit). SAML/onelogin + sqlite. Some tests hardcode `/var/log`, `/data`, `/tmp` literals that may fail if the fs is touched. |
 | mu2edaq-heartbeatmonitor | STATIC | 🔧 CMAKE + ✅ | Flask monitor + UDP sender: Python side clean, daemon `os.fork()` **guarded**. `cpp_sender` unbuildable here. |
 | mu2edaq-kpp-scripts | STATIC | — | Empty of code (0 py, 0 sh) in this checkout. |
@@ -135,6 +137,12 @@ larger design questions filed as issues rather than patched blindly.
   exercised for every package to keep installs bounded).
 - End-to-end SSH/Kerberos flows (no Mu2e gateway/keytab reachable).
 
+**Install gotcha (PySide6/Qt).** Installing PySide6 into a venv under a deep
+directory hit the Windows 260-char `MAX_PATH` limit (pip `OSError`, a Qt
+`.obj` path overflows). Either enable Win32 long paths or put the venv under a
+short root (e.g. `C:\v\...`). This affects the test *environment*, not the
+packages.
+
 ## Issues filed
 
 Filed on `Mu2e/mu2edaq-main`, each titled with the submodule:
@@ -147,3 +155,4 @@ Filed on `Mu2e/mu2edaq-main`, each titled with the submodule:
 | [#10](https://github.com/Mu2e/mu2edaq-main/issues/10) | diskwatcher CLI tests fail: bash invoked with backslash Windows path | Open |
 | [#11](https://github.com/Mu2e/mu2edaq-main/issues/11) | SSH-tunnel + Kerberos tooling is Unix-only (5 packages) | Open — design decision |
 | [#12](https://github.com/Mu2e/mu2edaq-main/issues/12) | desktop / controlroom-setup: Linux `.desktop` install + ssh ControlMaster fail on Windows | Open — product decision |
+| [#13](https://github.com/Mu2e/mu2edaq-main/issues/13) | downtime-logger logfile detector: open handle blocks rotation + inode detection on Windows | Open — design decision |

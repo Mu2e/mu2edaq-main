@@ -21,7 +21,9 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **4 packages were executed end-to-end on Windows.** `mu2edaq-discovery` core:
+- **6 packages were executed end-to-end on Windows.** `mu2edaq-operations`:
+  **150 passed** (clean). `mu2edaq-runlog-db`: Django `manage.py check` — **no
+  issues**. `mu2edaq-discovery` core:
   **23 passed**. `mu2edaq-diskwatcher`: **275 passed, 6 failed, 12 skipped** —
   every failure is a test that shells out to a `.sh` script via
   `subprocess.run(["bash", <windows-path>])`, where MSYS bash mangles the
@@ -80,11 +82,11 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-fts | STATIC | ⚠️ RUNTIME | Daemon **guarded** (`os.name == "nt"` → clean exit). SAML/onelogin + sqlite. Some tests hardcode `/var/log`, `/data`, `/tmp` literals that may fail if the fs is touched. |
 | mu2edaq-heartbeatmonitor | STATIC | 🔧 CMAKE + ✅ | Flask monitor + UDP sender: Python side clean, daemon `os.fork()` **guarded**. `cpp_sender` unbuildable here. |
 | mu2edaq-kpp-scripts | STATIC | — | Empty of code (0 py, 0 sh) in this checkout. |
-| mu2edaq-operations | STATIC | ✅ CLEAN | No Unix-only imports/paths found; 12 bash ops scripts alongside. |
+| mu2edaq-operations | **RAN** | ✅ CLEAN | **150 passed** on Windows (with `requirements.txt` deps installed). 12 bash ops scripts alongside are Git-Bash-only. |
 | mu2edaq-phone-notification-system | STATIC | 🔧 CMAKE + ⚠️ | APNs push; C++ lib unbuildable here. Carries the known APNs-key test-isolation failure from the AL9 report (unrelated to Windows). |
 | mu2edaq-resource-manager | STATIC | 🔧 CMAKE + ✅ | FastAPI service (Python clean) + C++ component (unbuildable here). |
 | mu2edaq-reverse-proxy | STATIC | ⚠️ RUNTIME | PyQt6/Flask; `klist -s` Kerberos gate; `cpp/` component. |
-| mu2edaq-runlog-db | STATIC | ✅ CLEAN | Django project; `manage.py check` expected clean on Windows. |
+| mu2edaq-runlog-db | **RAN** | ✅ CLEAN | Django `manage.py check` — **no issues** on Windows. |
 | mu2edaq-shifter-tools | STATIC | ❌ BROKEN (fixed) | `os.getuid()` at module top of `open_tunnels.py` → import crash on Windows. **Fixed on this branch.** Also uses `ssh`/`scp`/`kill` at runtime. |
 | mu2edaq-snapshot-viewer | STATIC | ✅ CLEAN | PySide6 + `mss` screen capture (cross-platform) + waitress. No Unix-only imports found. |
 | mu2edaq-trigger-scalers | STATIC | 🔧 CMAKE | Qt6 C++ only (0 Python). Unbuildable here. |

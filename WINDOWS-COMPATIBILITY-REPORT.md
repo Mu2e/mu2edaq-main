@@ -21,7 +21,9 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **8 packages were executed end-to-end on Windows.** `mu2edaq-downtime-logger`:
+- **9 packages were executed end-to-end on Windows.** `mu2edaq-snapshot-viewer`:
+  **100 passed / 1 skipped** (2 tests fixed: Windows path in double-quoted
+  YAML). `mu2edaq-downtime-logger`:
   **66 passed / 1 failed** (logfile-rotation file lock, #13).
   `mu2edaq-cluster-tools`:
   **151 passed / 1 skipped** (symlink test, fixed). `mu2edaq-operations`:
@@ -91,7 +93,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-reverse-proxy | STATIC | ⚠️ RUNTIME | PyQt6/Flask; `klist -s` Kerberos gate; `cpp/` component. |
 | mu2edaq-runlog-db | **RAN** | ✅ CLEAN | Django `manage.py check` — **no issues** on Windows. |
 | mu2edaq-shifter-tools | STATIC | ❌ BROKEN (fixed) | `os.getuid()` at module top of `open_tunnels.py` → import crash on Windows. **Fixed on this branch.** Also uses `ssh`/`scp`/`kill` at runtime. |
-| mu2edaq-snapshot-viewer | STATIC | ✅ CLEAN | PySide6 + `mss` screen capture (cross-platform) + waitress. No Unix-only imports found. |
+| mu2edaq-snapshot-viewer | **RAN** | ✅ CLEAN | **100 passed / 1 skipped** after fixing 2 tests that hand-wrote Windows paths into double-quoted YAML (`\U` escape error). Fixed to use `yaml.safe_dump` (`windows-compat@d0dea32`). Production code already used safe_dump. |
 | mu2edaq-trigger-scalers | STATIC | 🔧 CMAKE | Qt6 C++ only (0 Python). Unbuildable here. |
 
 ## The harness itself (top-level scripts)

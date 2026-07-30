@@ -163,6 +163,7 @@ submodule's `windows-compat` branch. Progress:
 | Package | PowerShell scripts added | Tests added | Suite | Commit |
 |---|---|---|---|---|
 | mu2edaq-bigredbox | `bootstrap.ps1`, `start-mu2edaq-bigredbox.ps1`, `stop-mu2edaq-bigredbox.ps1` | `tests/test_windows_compat.py` (6) | 53 passed | `1c70b33` |
+| mu2edaq-diskwatcher | `bootstrap-diskwatcher.ps1`, `start-…ps1`, `stop-…ps1`, `lib/diskwatcher-proc.ps1` | `tests/test_windows_scripts.py` (parity + parse + dry-run); bash tests gated to POSIX (**closes #10**) | 282 passed / 18 skipped | `b691bf8` |
 
 ## Not verifiable on this host
 
@@ -186,7 +187,7 @@ Filed on `Mu2e/mu2edaq-main`, each titled with the submodule:
 | [#7](https://github.com/Mu2e/mu2edaq-main/issues/7) | shifter-tools `open_tunnels.py` `os.getuid()` import crash | **Fixed** (`mu2edaq-shifter-tools@47f8636`, branch `windows-compat`) |
 | [#8](https://github.com/Mu2e/mu2edaq-main/issues/8) | bigredbox `/tmp` PID/log defaults not portable | **Fixed** (`mu2edaq-bigredbox@f55615b`, branch `windows-compat`) |
 | [#9](https://github.com/Mu2e/mu2edaq-main/issues/9) | Harness (build-all/test-all/install-discovery) assumes `python3` + `venv/bin` | Open — needs maintainer decision |
-| [#10](https://github.com/Mu2e/mu2edaq-main/issues/10) | diskwatcher CLI tests fail: bash invoked with backslash Windows path | Open |
+| [#10](https://github.com/Mu2e/mu2edaq-main/issues/10) | diskwatcher CLI tests fail: bash invoked with backslash Windows path | **Fixed** (`mu2edaq-diskwatcher@b691bf8`) |
 | [#11](https://github.com/Mu2e/mu2edaq-main/issues/11) | SSH-tunnel + Kerberos tooling is Unix-only (5 packages) | Open — design decision |
 | [#12](https://github.com/Mu2e/mu2edaq-main/issues/12) | desktop / controlroom-setup: Linux `.desktop` install + ssh ControlMaster fail on Windows | Open — product decision |
 | [#13](https://github.com/Mu2e/mu2edaq-main/issues/13) | downtime-logger logfile detector: open handle blocks rotation + inode detection on Windows | Open — design decision |

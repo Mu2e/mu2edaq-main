@@ -169,6 +169,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-cluster-tools | `bootstrap.ps1`, `install.ps1` (per-user install → `%LOCALAPPDATA%` + `.cmd` launchers) | `tests/test_windows_compat.py` (6): ipconfig fallback, ping flags, parity/parse. **Fixed a real Windows gap**: `ssh_selector` had no `ipconfig` fallback → empty network auto-detect | 157 passed / 1 skipped | `fee22e5` |
 | mu2edaq-phone-notification-system | `bootstrap.ps1`, `start-`/`stop-mu2edaq-notify-server.ps1` (aws proxy/chain scripts are Linux deploy, not ported) | `tests/test_windows_scripts.py` (6): parity, parse, aws-not-ported, config path guard | 94 passed / 1 fail (pre-existing APNs) | `ba1e678` |
 | mu2edaq-controlroom-setup | `bootstrap.ps1`, `bin/start-`/`stop-controlroom.ps1` (server VNC scripts are Linux cluster, not ported) | `tests/test_windows_compat.py` (7). **Fixed `gio` crash** in crs-provision-desktop + 2 test fixes → cleared all 4 phase-1 failures (#12) | 48 passed / 1 skip / 1 xfail (was 38/4-fail) | `60bfffe` |
+| mu2edaq-desktop | `bootstrap.ps1`, `start-`/`stop-mu2edaq-desktop.ps1` (bin/install-* are Linux XDG/AL9 installers, not ported) | `tests/test_windows_compat.py` (6). **Fixed same `gio` crash** in icons + 2 test skips → cleared all 4 phase-1 failures (**closes #12**) | 21 passed / 2 skip (was 13/4-fail) | `e4ae19f` |
 
 ## Not verifiable on this host
 
@@ -194,6 +195,6 @@ Filed on `Mu2e/mu2edaq-main`, each titled with the submodule:
 | [#9](https://github.com/Mu2e/mu2edaq-main/issues/9) | Harness (build-all/test-all/install-discovery) assumes `python3` + `venv/bin` | Open — needs maintainer decision |
 | [#10](https://github.com/Mu2e/mu2edaq-main/issues/10) | diskwatcher CLI tests fail: bash invoked with backslash Windows path | **Fixed** (`mu2edaq-diskwatcher@b691bf8`) |
 | [#11](https://github.com/Mu2e/mu2edaq-main/issues/11) | SSH-tunnel + Kerberos tooling is Unix-only (5 packages) | Open — design decision |
-| [#12](https://github.com/Mu2e/mu2edaq-main/issues/12) | desktop / controlroom-setup: Linux `.desktop` install + ssh ControlMaster fail on Windows | Open — product decision |
+| [#12](https://github.com/Mu2e/mu2edaq-main/issues/12) | desktop / controlroom-setup: Linux `.desktop` install + ssh ControlMaster fail on Windows | **Fixed** (`controlroom-setup@60bfffe`, `desktop@e4ae19f`) |
 | [#13](https://github.com/Mu2e/mu2edaq-main/issues/13) | downtime-logger logfile detector: open handle blocks rotation + inode detection on Windows | Open — design decision |
 | [#14](https://github.com/Mu2e/mu2edaq-main/issues/14) | bigredbox `SO_REUSEADDR` defeats single-instance port check on Windows | **Fixed** (`mu2edaq-bigredbox@d314369`) |

@@ -153,6 +153,17 @@ These are the two changes that are unambiguously correct on every platform. The
 runtime-Unix items (SSH/Kerberos/`ps`/`kill`, the bash harness, C++ builds) are
 larger design questions filed as issues rather than patched blindly.
 
+## PowerShell scripts & added test coverage (phase 2)
+
+Adding native PowerShell (`.ps1`) ports of the bash launch/bootstrap scripts so
+Windows nodes have first-class launchers, plus targeted cross-platform test
+coverage. All parse-checked with the PowerShell parser and committed to each
+submodule's `windows-compat` branch. Progress:
+
+| Package | PowerShell scripts added | Tests added | Suite | Commit |
+|---|---|---|---|---|
+| mu2edaq-bigredbox | `bootstrap.ps1`, `start-mu2edaq-bigredbox.ps1`, `stop-mu2edaq-bigredbox.ps1` | `tests/test_windows_compat.py` (6) | 53 passed | `1c70b33` |
+
 ## Not verifiable on this host
 
 - All 🔧 CMAKE C++ components — no compiler/CMake installed.

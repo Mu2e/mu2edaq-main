@@ -164,6 +164,7 @@ submodule's `windows-compat` branch. Progress:
 |---|---|---|---|---|
 | mu2edaq-bigredbox | `bootstrap.ps1`, `start-mu2edaq-bigredbox.ps1`, `stop-mu2edaq-bigredbox.ps1` | `tests/test_windows_compat.py` (6) | 53 passed | `1c70b33` |
 | mu2edaq-diskwatcher | `bootstrap-diskwatcher.ps1`, `start-…ps1`, `stop-…ps1`, `lib/diskwatcher-proc.ps1` | `tests/test_windows_scripts.py` (parity + parse + dry-run); bash tests gated to POSIX (**closes #10**) | 282 passed / 18 skipped | `b691bf8` |
+| mu2edaq-snapshot-viewer | (5 launch/bootstrap `.ps1` already shipped; parse-verified) | `tests/test_windows_scripts.py` (parity + parse + capture) | 107 passed / 1 skipped | `25ba27a` |
 
 ## Not verifiable on this host
 

@@ -21,7 +21,9 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **15 packages were executed on Windows.** `mu2edaq-phone-notification-system`:
+- **16 packages were executed on Windows.** `mu2edaq-controlroom`:
+  `test_daq_env_tools` **2 passed**, but its `krb5` dep won't install on Windows
+  and its runtime is Unix-only (#11). `mu2edaq-phone-notification-system`:
   Python suite **88 passed / 1 failed** (1 fix; the fail is the pre-existing
   non-Windows APNs bug). `mu2edaq-commandline-tools`:
   Python suite **18 passed** (C++ part blocked). `mu2edaq-resource-manager`:
@@ -84,7 +86,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-commandline-tools | **RAN** (py) | 🔧 CMAKE + ✅ | Python suite **18 passed** on Windows. `/etc/mu2edaq/...` is only a candidate config path (skipped if absent). C++ component unbuildable here. |
 | mu2edaq-config | STATIC | 📜 SCRIPTS | YAML config + 8 bash scripts; no Python. |
 | mu2edaq-controlcenter | STATIC | ⚠️ RUNTIME | PyQt6 + WebEngine GUI, 5 bash scripts. |
-| mu2edaq-controlroom | STATIC | ❌ BROKEN | NOVA-legacy: hardcoded `/home/novadaq/...`, `ssh`, `ps aux`, `os.system("kill ...")`, `klist`/`kinit`. Tunnel & Kerberos features are Unix-only. |
+| mu2edaq-controlroom | **RAN** (partial) | ❌ BROKEN | `test_daq_env_tools.py` **2 passed**, but the `krb5` dependency **fails to install on Windows** (no wheel; needs `krb5-config`). NOVA-legacy runtime is Unix-only: hardcoded `/home/novadaq/...`, `ssh`, `ps aux`, `os.system("kill ...")`, `klist`/`kinit`. See #11. |
 | mu2edaq-controlroom-setup | **RAN** | ⚠️ RUNTIME | **38 passed / 4 failed / 1 xfailed.** Failures: Linux `.desktop` generation + ssh ControlMaster socket path (`~/.crs`; Windows `expanduser` ignores `$HOME`, and Windows OpenSSH lacks ControlMaster). `klist -s` gate is Windows-wrong. See #12. |
 | mu2edaq-dashboard | STATIC | 🔧 CMAKE + ⚠️ | Flask dashboard (fine); daemon `os.fork()` **guarded**; C++ sender unbuildable here. |
 | mu2edaq-dataformat-viewer | STATIC | 🔧 CMAKE + ⚠️ | PyQt6 viewer + C++ component (unbuildable here). |

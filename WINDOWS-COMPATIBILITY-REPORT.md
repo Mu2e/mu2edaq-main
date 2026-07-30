@@ -166,6 +166,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-diskwatcher | `bootstrap-diskwatcher.ps1`, `start-…ps1`, `stop-…ps1`, `lib/diskwatcher-proc.ps1` | `tests/test_windows_scripts.py` (parity + parse + dry-run); bash tests gated to POSIX (**closes #10**) | 282 passed / 18 skipped | `b691bf8` |
 | mu2edaq-snapshot-viewer | (5 launch/bootstrap `.ps1` already shipped; parse-verified) | `tests/test_windows_scripts.py` (parity + parse + capture) | 107 passed / 1 skipped | `25ba27a` |
 | mu2edaq-shifter-tools | `bootstrap.ps1` (venv setup). Kerberos/VNC/noVNC/login admin scripts are Unix-only (#11), not ported | first-ever `tests/` (5): open_tunnels import, read_config, parity/parse. **Fixed a real `import sys` bug** in `read_config.py` | 5 passed | `9cab9ad` |
+| mu2edaq-cluster-tools | `bootstrap.ps1`, `install.ps1` (per-user install → `%LOCALAPPDATA%` + `.cmd` launchers) | `tests/test_windows_compat.py` (6): ipconfig fallback, ping flags, parity/parse. **Fixed a real Windows gap**: `ssh_selector` had no `ipconfig` fallback → empty network auto-detect | 157 passed / 1 skipped | `fee22e5` |
 
 ## Not verifiable on this host
 

@@ -181,6 +181,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-heartbeatmonitor | `bootstrap_heartbeat_monitor.ps1`, `start-`/`stop-mu2edaq-heartbeatmonitor.ps1` (start backgrounds via Start-Process; daemon `os.fork` guarded). C++ cpp_sender not built | first `tests/` (6). **Fixed `/tmp` daemon defaults** → `tempfile.gettempdir()` (as #8) | 6 passed | `346d774` |
 | mu2edaq-dashboard | `bootstrap_dashboard.ps1`, `start-`/`stop-mu2edaq-dashboard.ps1` (start backgrounds via Start-Process; daemon `os.fork` guarded). C++ sender not built | first `tests/` (6): import, defaults-not-/tmp, fork-guard, parity/parse. Source clean (defaults relative) | 6 passed | `42ccb9e` |
 | mu2edaq-controlcenter | `bootstrap.ps1`, `start-`/`stop-mu2edaq-controlcenter.ps1` (start mirrors the GPU/OpenGL probe + status-server wait + pings; stop finds by pid/cmdline) | first `tests/` (7): non-GUI import, parity/parse, aliases | 7 passed | `142399e` |
+| mu2edaq-dataformat-viewer | `bootstrap.ps1`, `start-`/`stop-mu2edaq-dataformat-viewer.ps1` (start backgrounds via Start-Process). C++ component not built | first `tests/` (8): config load, `__future__` 3.9-guard present, parity/parse | 8 passed | `aeeeec0` |
 
 ## Not verifiable on this host
 

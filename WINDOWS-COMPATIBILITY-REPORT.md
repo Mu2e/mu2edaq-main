@@ -176,6 +176,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-operations | **none** — 12 `.sh` are Linux DAQ ops (PCIe/DTC/IPMI/lm-sensors/otsdaq/pssh), no app launchers; ports would be non-functional | `tests/test_windows_compat.py` (5): temp reader degrades gracefully (psutil `sensors_temperatures` guard), clean `main()` error, no-launcher invariant | 155 passed (was 150) | `acf074e` |
 | mu2edaq-resource-manager | `bootstrap.ps1`, `start-`/`stop-mu2edaq-resource-manager.ps1` (RM_* env contract; start backgrounds via Start-Process). C++ build + `load_env.sh` are Linux, not ported | `tests/test_windows_compat.py` (5): parity, parse, cpp/env-not-ported. Server Windows-safe (uvicorn) | 30 passed (py; was 25) | `7f88f57` |
 | mu2edaq-runlog-db | 5-script launch chain: `bootstrap-`/`start-`/`stop-mu2e-rundb-viewer.ps1` + standardized wrappers. **Prod uses waitress on Windows** (gunicorn is Unix-only); dev uses runserver | `tests/test_windows_scripts.py` (7): chain parity, parse, `manage.py check` | 7 passed + check clean | `cd41148` |
+| mu2edaq-discovery | `bootstrap.ps1`, `start-`/`stop-mu2edaq-discover-gui.ps1` (stop via CIM cmdline match) | `tests/test_windows_compat.py` (6): SO_REUSEPORT guard, multicast constants, parity/parse. UDP multicast Windows-safe (loopback test passes) | 29 passed (was 23) | `c8cc78a` |
 
 ## Not verifiable on this host
 

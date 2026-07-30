@@ -21,7 +21,8 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **9 packages were executed end-to-end on Windows.** `mu2edaq-snapshot-viewer`:
+- **10 packages were executed end-to-end on Windows.** `mu2edaq-reverse-proxy`:
+  **229 passed** (clean). `mu2edaq-snapshot-viewer`:
   **100 passed / 1 skipped** (2 tests fixed: Windows path in double-quoted
   YAML). `mu2edaq-downtime-logger`:
   **66 passed / 1 failed** (logfile-rotation file lock, #13).
@@ -90,7 +91,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-operations | **RAN** | ✅ CLEAN | **150 passed** on Windows (with `requirements.txt` deps installed). 12 bash ops scripts alongside are Git-Bash-only. |
 | mu2edaq-phone-notification-system | STATIC | 🔧 CMAKE + ⚠️ | APNs push; C++ lib unbuildable here. Carries the known APNs-key test-isolation failure from the AL9 report (unrelated to Windows). |
 | mu2edaq-resource-manager | STATIC | 🔧 CMAKE + ✅ | FastAPI service (Python clean) + C++ component (unbuildable here). |
-| mu2edaq-reverse-proxy | STATIC | ⚠️ RUNTIME | PyQt6/Flask; `klist -s` Kerberos gate; `cpp/` component. |
+| mu2edaq-reverse-proxy | **RAN** | ✅ CLEAN | **229 passed** on Windows (full suite). `klist -s` Kerberos gate is mocked in tests and remains a runtime concern (#11); `cpp/` component not built here. |
 | mu2edaq-runlog-db | **RAN** | ✅ CLEAN | Django `manage.py check` — **no issues** on Windows. |
 | mu2edaq-shifter-tools | STATIC | ❌ BROKEN (fixed) | `os.getuid()` at module top of `open_tunnels.py` → import crash on Windows. **Fixed on this branch.** Also uses `ssh`/`scp`/`kill` at runtime. |
 | mu2edaq-snapshot-viewer | **RAN** | ✅ CLEAN | **100 passed / 1 skipped** after fixing 2 tests that hand-wrote Windows paths into double-quoted YAML (`\U` escape error). Fixed to use `yaml.safe_dump` (`windows-compat@d0dea32`). Production code already used safe_dump. |

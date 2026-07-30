@@ -173,6 +173,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-downtime-logger | `bootstrap.ps1`, `start-`/`stop-mu2edaq-downtime-logger.ps1` | `tests/test_windows_scripts.py` + new `test_..._copytruncate` (cross-platform rotation). **#13 narrowed**: `st_ino` works on Windows & copytruncate handled; only unlink-while-open rotation is POSIX-only (gated) | 67 passed / 1 skip (was 66/1-fail) | `20549a6` |
 | mu2edaq-fts | `bootstrap_fts.ps1`, `start-`/`stop-mu2edaq-fts.ps1` (start backgrounds via Start-Process since `--daemon` fork is Windows-guarded) | `tests/test_windows_compat.py` (5): parity, parse, daemon-guard. Source review clean (scp/xrdcp/hooks degrade gracefully) | 42 passed (was 37) | `6fd9886` |
 | mu2edaq-reverse-proxy | 5 scripts: `bootstrap.ps1`, `start-`/`stop-mu2edaq-proxy-{gui,server}.ps1` (stop matches by cmdline via CIM = `pgrep -f`) | `tests/test_windows_compat.py` (7): run_dir/socket cross-platform, parity/parse. `klist`/ssh runtime stays #11 | 236 passed (was 229) | `19de4a9` |
+| mu2edaq-operations | **none** — 12 `.sh` are Linux DAQ ops (PCIe/DTC/IPMI/lm-sensors/otsdaq/pssh), no app launchers; ports would be non-functional | `tests/test_windows_compat.py` (5): temp reader degrades gracefully (psutil `sensors_temperatures` guard), clean `main()` error, no-launcher invariant | 155 passed (was 150) | `acf074e` |
 
 ## Not verifiable on this host
 

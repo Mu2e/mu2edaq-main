@@ -21,7 +21,8 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **13 packages were executed on Windows.** `mu2edaq-resource-manager`:
+- **14 packages were executed on Windows.** `mu2edaq-commandline-tools`:
+  Python suite **18 passed** (C++ part blocked). `mu2edaq-resource-manager`:
   FastAPI Python suite **25 passed** (C++ part blocked). `mu2edaq-fts`:
   **37 passed** (SAML wheels install fine). `mu2edaq-bigredbox`:
   **47 passed** after fixing the `/tmp` defaults (#8) and a `SO_REUSEADDR`
@@ -78,7 +79,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-CFOControl | STATIC | 📜 SCRIPTS | 2 py + 2 sh helper scripts; no packaging/tests. Not import-tested. |
 | mu2edaq-bigredbox | **RAN** | ✅ CLEAN (fixed) | **47 passed** after two fixes: `/tmp` PID/log defaults → `tempfile.gettempdir()` (#8), and `SO_REUSEADDR` → `SO_EXCLUSIVEADDRUSE` on Windows so the single-instance port check works (#14). Both on `windows-compat@d314369`. |
 | mu2edaq-cluster-tools | **RAN** | ✅ CLEAN | **151 passed / 1 skipped** on Windows. Only skip was a test creating a symlink (needs elevation on Windows) — fixed to skip cleanly (`windows-compat@d82f869`). LAN scan / ssh-selector still shell out to `ssh` at runtime. |
-| mu2edaq-commandline-tools | STATIC | 🔧 CMAKE + ✅ py | Yields `/etc/mu2edaq/...` as a *candidate* config path (skipped if absent — harmless). C++ component unbuildable here. |
+| mu2edaq-commandline-tools | **RAN** (py) | 🔧 CMAKE + ✅ | Python suite **18 passed** on Windows. `/etc/mu2edaq/...` is only a candidate config path (skipped if absent). C++ component unbuildable here. |
 | mu2edaq-config | STATIC | 📜 SCRIPTS | YAML config + 8 bash scripts; no Python. |
 | mu2edaq-controlcenter | STATIC | ⚠️ RUNTIME | PyQt6 + WebEngine GUI, 5 bash scripts. |
 | mu2edaq-controlroom | STATIC | ❌ BROKEN | NOVA-legacy: hardcoded `/home/novadaq/...`, `ssh`, `ps aux`, `os.system("kill ...")`, `klist`/`kinit`. Tunnel & Kerberos features are Unix-only. |

@@ -177,6 +177,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-resource-manager | `bootstrap.ps1`, `start-`/`stop-mu2edaq-resource-manager.ps1` (RM_* env contract; start backgrounds via Start-Process). C++ build + `load_env.sh` are Linux, not ported | `tests/test_windows_compat.py` (5): parity, parse, cpp/env-not-ported. Server Windows-safe (uvicorn) | 30 passed (py; was 25) | `7f88f57` |
 | mu2edaq-runlog-db | 5-script launch chain: `bootstrap-`/`start-`/`stop-mu2e-rundb-viewer.ps1` + standardized wrappers. **Prod uses waitress on Windows** (gunicorn is Unix-only); dev uses runserver | `tests/test_windows_scripts.py` (7): chain parity, parse, `manage.py check` | 7 passed + check clean | `cd41148` |
 | mu2edaq-discovery | `bootstrap.ps1`, `start-`/`stop-mu2edaq-discover-gui.ps1` (stop via CIM cmdline match) | `tests/test_windows_compat.py` (6): SO_REUSEPORT guard, multicast constants, parity/parse. UDP multicast Windows-safe (loopback test passes) | 29 passed (was 23) | `c8cc78a` |
+| mu2edaq-commandline-tools | `bootstrap.ps1`, `start-`/`stop-mu2edaq-commandline-tools.ps1` (full option/env parity). C++ build gated on cmake presence | `tests/test_windows_compat.py` (6): config candidate-list graceful, expanduser, parity/parse | 24 passed py (was 18) | `66e3e41` |
 
 ## Not verifiable on this host
 

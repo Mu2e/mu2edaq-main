@@ -21,6 +21,13 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
+- **Sweep complete: 19 of 26 packages exercised on Windows** — 16 with their
+  pytest suites run, plus 3 no-suite apps (`dashboard`, `heartbeatmonitor`,
+  `controlcenter`) confirmed to import clean. The other 7 are out of scope on
+  this host: `Bootstrap` (Unix workstation setup), `CFOControl` / `config` /
+  `kpp-scripts` (shell/YAML only), `trigger-scalers` (Qt6 C++ only), and
+  `shifter-tools` (no suite; its import-crash bug is fixed). See the per-package
+  matrix for each verdict.
 - **16 packages were executed on Windows.** `mu2edaq-controlroom`:
   `test_daq_env_tools` **2 passed**, but its `krb5` dep won't install on Windows
   and its runtime is Unix-only (#11). `mu2edaq-phone-notification-system`:
@@ -85,17 +92,17 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-cluster-tools | **RAN** | ✅ CLEAN | **151 passed / 1 skipped** on Windows. Only skip was a test creating a symlink (needs elevation on Windows) — fixed to skip cleanly (`windows-compat@d82f869`). LAN scan / ssh-selector still shell out to `ssh` at runtime. |
 | mu2edaq-commandline-tools | **RAN** (py) | 🔧 CMAKE + ✅ | Python suite **18 passed** on Windows. `/etc/mu2edaq/...` is only a candidate config path (skipped if absent). C++ component unbuildable here. |
 | mu2edaq-config | STATIC | 📜 SCRIPTS | YAML config + 8 bash scripts; no Python. |
-| mu2edaq-controlcenter | STATIC | ⚠️ RUNTIME | PyQt6 + WebEngine GUI, 5 bash scripts. |
+| mu2edaq-controlcenter | **RAN** (import) | ✅ CLEAN | No pytest suite; all `src/*.py` (incl. PyQt6 + WebEngine modules) **import clean** on Windows (offscreen). 5 bash scripts alongside. |
 | mu2edaq-controlroom | **RAN** (partial) | ❌ BROKEN | `test_daq_env_tools.py` **2 passed**, but the `krb5` dependency **fails to install on Windows** (no wheel; needs `krb5-config`). NOVA-legacy runtime is Unix-only: hardcoded `/home/novadaq/...`, `ssh`, `ps aux`, `os.system("kill ...")`, `klist`/`kinit`. See #11. |
 | mu2edaq-controlroom-setup | **RAN** | ⚠️ RUNTIME | **38 passed / 4 failed / 1 xfailed.** Failures: Linux `.desktop` generation + ssh ControlMaster socket path (`~/.crs`; Windows `expanduser` ignores `$HOME`, and Windows OpenSSH lacks ControlMaster). `klist -s` gate is Windows-wrong. See #12. |
-| mu2edaq-dashboard | STATIC | 🔧 CMAKE + ⚠️ | Flask dashboard (fine); daemon `os.fork()` **guarded**; C++ sender unbuildable here. |
+| mu2edaq-dashboard | **RAN** (import) | 🔧 CMAKE + ✅ | No pytest suite; `dashboard.py` **imports clean** on Windows. Daemon `os.fork()` **guarded**; C++ sender unbuildable here. |
 | mu2edaq-dataformat-viewer | STATIC | 🔧 CMAKE + ⚠️ | PyQt6 viewer + C++ component (unbuildable here). |
 | mu2edaq-desktop | **RAN** | ⚠️ RUNTIME | **13 passed / 4 failed.** Imports clean; failures are executing `.sh` as a program (WinError 193) and installing Linux `.desktop` entries (WinError 2). Launcher-install is Linux-specific. See #12. |
 | mu2edaq-discovery | **RAN** | ✅ CLEAN | **23 passed** on Windows (core: protocol/cli/loopback). GUI test needs Qt/display (excluded). stdlib-only core. |
 | mu2edaq-diskwatcher | **RAN** | ✅ CLEAN | **275 passed / 6 failed / 12 skipped**. All 6 failures = tests invoking `.sh` via `bash <windows-path>` (backslash mangling), not package defects. Daemon `os.fork()` **guarded**. |
 | mu2edaq-downtime-logger | **RAN** | ⚠️ RUNTIME | **66 passed / 1 failed** (with `pytest-qt`). Failure: logfile detector holds the file open (blocks rotation, `WinError 32`) and detects rotation via `st_ino` (meaningless on Windows). See #13. Rest of the app clean. |
 | mu2edaq-fts | **RAN** | ✅ CLEAN | **37 passed** on Windows. `onelogin.saml2` SAML wheels install fine; daemon **guarded** (`os.name == "nt"` → clean exit). The `/var/log`/`/data` literals in tests are stored strings, not touched on disk, so they pass. |
-| mu2edaq-heartbeatmonitor | STATIC | 🔧 CMAKE + ✅ | Flask monitor + UDP sender: Python side clean, daemon `os.fork()` **guarded**. `cpp_sender` unbuildable here. |
+| mu2edaq-heartbeatmonitor | **RAN** (import) | 🔧 CMAKE + ✅ | No pytest suite; `heartbeat_monitor.py`/`heartbeat_sender.py` **import clean** on Windows. Daemon `os.fork()` **guarded**. `cpp_sender` unbuildable here. |
 | mu2edaq-kpp-scripts | STATIC | — | Empty of code (0 py, 0 sh) in this checkout. |
 | mu2edaq-operations | **RAN** | ✅ CLEAN | **150 passed** on Windows (with `requirements.txt` deps installed). 12 bash ops scripts alongside are Git-Bash-only. |
 | mu2edaq-phone-notification-system | **RAN** (py) | 🔧 CMAKE + ✅ | Python suite **88 passed / 1 failed** after fixing a Windows path in double-quoted YAML (`windows-compat@4fdc5f0`). The 1 remaining failure is the pre-existing APNs-key test-isolation bug (missing `config/apns_key.p8`), not Windows-related. C++ lib unbuildable here. |

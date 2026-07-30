@@ -21,7 +21,8 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **11 packages were executed end-to-end on Windows.** `mu2edaq-bigredbox`:
+- **12 packages were executed end-to-end on Windows.** `mu2edaq-fts`:
+  **37 passed** (SAML wheels install fine). `mu2edaq-bigredbox`:
   **47 passed** after fixing the `/tmp` defaults (#8) and a `SO_REUSEADDR`
   single-instance bug (#14). `mu2edaq-reverse-proxy`:
   **229 passed** (clean). `mu2edaq-snapshot-viewer`:
@@ -87,7 +88,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-discovery | **RAN** | ✅ CLEAN | **23 passed** on Windows (core: protocol/cli/loopback). GUI test needs Qt/display (excluded). stdlib-only core. |
 | mu2edaq-diskwatcher | **RAN** | ✅ CLEAN | **275 passed / 6 failed / 12 skipped**. All 6 failures = tests invoking `.sh` via `bash <windows-path>` (backslash mangling), not package defects. Daemon `os.fork()` **guarded**. |
 | mu2edaq-downtime-logger | **RAN** | ⚠️ RUNTIME | **66 passed / 1 failed** (with `pytest-qt`). Failure: logfile detector holds the file open (blocks rotation, `WinError 32`) and detects rotation via `st_ino` (meaningless on Windows). See #13. Rest of the app clean. |
-| mu2edaq-fts | STATIC | ⚠️ RUNTIME | Daemon **guarded** (`os.name == "nt"` → clean exit). SAML/onelogin + sqlite. Some tests hardcode `/var/log`, `/data`, `/tmp` literals that may fail if the fs is touched. |
+| mu2edaq-fts | **RAN** | ✅ CLEAN | **37 passed** on Windows. `onelogin.saml2` SAML wheels install fine; daemon **guarded** (`os.name == "nt"` → clean exit). The `/var/log`/`/data` literals in tests are stored strings, not touched on disk, so they pass. |
 | mu2edaq-heartbeatmonitor | STATIC | 🔧 CMAKE + ✅ | Flask monitor + UDP sender: Python side clean, daemon `os.fork()` **guarded**. `cpp_sender` unbuildable here. |
 | mu2edaq-kpp-scripts | STATIC | — | Empty of code (0 py, 0 sh) in this checkout. |
 | mu2edaq-operations | **RAN** | ✅ CLEAN | **150 passed** on Windows (with `requirements.txt` deps installed). 12 bash ops scripts alongside are Git-Bash-only. |

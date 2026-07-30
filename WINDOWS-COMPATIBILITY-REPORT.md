@@ -21,7 +21,9 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **14 packages were executed on Windows.** `mu2edaq-commandline-tools`:
+- **15 packages were executed on Windows.** `mu2edaq-phone-notification-system`:
+  Python suite **88 passed / 1 failed** (1 fix; the fail is the pre-existing
+  non-Windows APNs bug). `mu2edaq-commandline-tools`:
   Python suite **18 passed** (C++ part blocked). `mu2edaq-resource-manager`:
   FastAPI Python suite **25 passed** (C++ part blocked). `mu2edaq-fts`:
   **37 passed** (SAML wheels install fine). `mu2edaq-bigredbox`:
@@ -94,7 +96,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-heartbeatmonitor | STATIC | 🔧 CMAKE + ✅ | Flask monitor + UDP sender: Python side clean, daemon `os.fork()` **guarded**. `cpp_sender` unbuildable here. |
 | mu2edaq-kpp-scripts | STATIC | — | Empty of code (0 py, 0 sh) in this checkout. |
 | mu2edaq-operations | **RAN** | ✅ CLEAN | **150 passed** on Windows (with `requirements.txt` deps installed). 12 bash ops scripts alongside are Git-Bash-only. |
-| mu2edaq-phone-notification-system | STATIC | 🔧 CMAKE + ⚠️ | APNs push; C++ lib unbuildable here. Carries the known APNs-key test-isolation failure from the AL9 report (unrelated to Windows). |
+| mu2edaq-phone-notification-system | **RAN** (py) | 🔧 CMAKE + ✅ | Python suite **88 passed / 1 failed** after fixing a Windows path in double-quoted YAML (`windows-compat@4fdc5f0`). The 1 remaining failure is the pre-existing APNs-key test-isolation bug (missing `config/apns_key.p8`), not Windows-related. C++ lib unbuildable here. |
 | mu2edaq-resource-manager | **RAN** (py) | 🔧 CMAKE + ✅ | FastAPI Python suite **25 passed** on Windows (needs `httpx` for `TestClient` — missing from `requirements.txt`, platform-agnostic). C++ component unbuildable here. |
 | mu2edaq-reverse-proxy | **RAN** | ✅ CLEAN | **229 passed** on Windows (full suite). `klist -s` Kerberos gate is mocked in tests and remains a runtime concern (#11); `cpp/` component not built here. |
 | mu2edaq-runlog-db | **RAN** | ✅ CLEAN | Django `manage.py check` — **no issues** on Windows. |
@@ -136,6 +138,7 @@ Unix workstation tool; no Windows port attempted.
 | 3 | mu2edaq-bigredbox | `src/mu2edaq_bigredbox/daq_alert.py` | `SO_EXCLUSIVEADDRUSE` on Windows (else `SO_REUSEADDR`) so the single-instance port check raises on a second bind. |
 | 4 | mu2edaq-cluster-tools | `tests/test_config.py` | Skip the symlink-dedup test when symlink creation isn't permitted (Windows non-elevated). |
 | 5 | mu2edaq-snapshot-viewer | `tests/test_server_web.py`, `tests/test_admin_cli.py` | Build test config via `yaml.safe_dump` so Windows paths aren't misread as double-quoted-scalar escapes. |
+| 6 | mu2edaq-phone-notification-system | `tests/test_config.py` | Same `yaml.safe_dump` fix for a Windows token-file path in double-quoted YAML. |
 
 These are the two changes that are unambiguously correct on every platform. The
 runtime-Unix items (SSH/Kerberos/`ps`/`kill`, the bash harness, C++ builds) are

@@ -21,7 +21,8 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **12 packages were executed end-to-end on Windows.** `mu2edaq-fts`:
+- **13 packages were executed on Windows.** `mu2edaq-resource-manager`:
+  FastAPI Python suite **25 passed** (C++ part blocked). `mu2edaq-fts`:
   **37 passed** (SAML wheels install fine). `mu2edaq-bigredbox`:
   **47 passed** after fixing the `/tmp` defaults (#8) and a `SO_REUSEADDR`
   single-instance bug (#14). `mu2edaq-reverse-proxy`:
@@ -93,7 +94,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 | mu2edaq-kpp-scripts | STATIC | — | Empty of code (0 py, 0 sh) in this checkout. |
 | mu2edaq-operations | **RAN** | ✅ CLEAN | **150 passed** on Windows (with `requirements.txt` deps installed). 12 bash ops scripts alongside are Git-Bash-only. |
 | mu2edaq-phone-notification-system | STATIC | 🔧 CMAKE + ⚠️ | APNs push; C++ lib unbuildable here. Carries the known APNs-key test-isolation failure from the AL9 report (unrelated to Windows). |
-| mu2edaq-resource-manager | STATIC | 🔧 CMAKE + ✅ | FastAPI service (Python clean) + C++ component (unbuildable here). |
+| mu2edaq-resource-manager | **RAN** (py) | 🔧 CMAKE + ✅ | FastAPI Python suite **25 passed** on Windows (needs `httpx` for `TestClient` — missing from `requirements.txt`, platform-agnostic). C++ component unbuildable here. |
 | mu2edaq-reverse-proxy | **RAN** | ✅ CLEAN | **229 passed** on Windows (full suite). `klist -s` Kerberos gate is mocked in tests and remains a runtime concern (#11); `cpp/` component not built here. |
 | mu2edaq-runlog-db | **RAN** | ✅ CLEAN | Django `manage.py check` — **no issues** on Windows. |
 | mu2edaq-shifter-tools | STATIC | ❌ BROKEN (fixed) | `os.getuid()` at module top of `open_tunnels.py` → import crash on Windows. **Fixed on this branch.** Also uses `ssh`/`scp`/`kill` at runtime. |

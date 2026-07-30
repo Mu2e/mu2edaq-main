@@ -21,7 +21,9 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 
 ## Bottom line
 
-- **10 packages were executed end-to-end on Windows.** `mu2edaq-reverse-proxy`:
+- **11 packages were executed end-to-end on Windows.** `mu2edaq-bigredbox`:
+  **47 passed** after fixing the `/tmp` defaults (#8) and a `SO_REUSEADDR`
+  single-instance bug (#14). `mu2edaq-reverse-proxy`:
   **229 passed** (clean). `mu2edaq-snapshot-viewer`:
   **100 passed / 1 skipped** (2 tests fixed: Windows path in double-quoted
   YAML). `mu2edaq-downtime-logger`:
@@ -72,7 +74,7 @@ calls to `ssh`/`klist`/`kinit`/`ps`/`kill`, bash-only scripts). Rows marked
 |---|---|---|---|
 | Bootstrap | STATIC | ⚠️ RUNTIME | Unix-workstation bootstrapper: bash/emacs/vim/gdb dotfiles (N/A on Windows) + `mu2e-ssh-setup.py` (Python, likely runs) with a bash wrapper. |
 | mu2edaq-CFOControl | STATIC | 📜 SCRIPTS | 2 py + 2 sh helper scripts; no packaging/tests. Not import-tested. |
-| mu2edaq-bigredbox | STATIC | ⚠️ RUNTIME (fixed) | PyQt6 alert GUI. Was ❌ via `/tmp` PID/log defaults → **fixed** to `tempfile.gettempdir()`. Daemon lifecycle via bash start/stop scripts. |
+| mu2edaq-bigredbox | **RAN** | ✅ CLEAN (fixed) | **47 passed** after two fixes: `/tmp` PID/log defaults → `tempfile.gettempdir()` (#8), and `SO_REUSEADDR` → `SO_EXCLUSIVEADDRUSE` on Windows so the single-instance port check works (#14). Both on `windows-compat@d314369`. |
 | mu2edaq-cluster-tools | **RAN** | ✅ CLEAN | **151 passed / 1 skipped** on Windows. Only skip was a test creating a symlink (needs elevation on Windows) — fixed to skip cleanly (`windows-compat@d82f869`). LAN scan / ssh-selector still shell out to `ssh` at runtime. |
 | mu2edaq-commandline-tools | STATIC | 🔧 CMAKE + ✅ py | Yields `/etc/mu2edaq/...` as a *candidate* config path (skipped if absent — harmless). C++ component unbuildable here. |
 | mu2edaq-config | STATIC | 📜 SCRIPTS | YAML config + 8 bash scripts; no Python. |
@@ -128,6 +130,9 @@ Unix workstation tool; no Windows port attempted.
 |---|---------|------|--------|
 | 1 | mu2edaq-shifter-tools | `open_tunnels.py` | Guard module-level `os.getuid()` so the module imports on Windows (falls back to `os.getpid()` where `getuid` is absent). |
 | 2 | mu2edaq-bigredbox | `src/mu2edaq_bigredbox/config.py` | Default PID/log paths derive from `tempfile.gettempdir()` instead of hardcoded `/tmp` (POSIX behavior unchanged; Windows now writes to `%TEMP%`). |
+| 3 | mu2edaq-bigredbox | `src/mu2edaq_bigredbox/daq_alert.py` | `SO_EXCLUSIVEADDRUSE` on Windows (else `SO_REUSEADDR`) so the single-instance port check raises on a second bind. |
+| 4 | mu2edaq-cluster-tools | `tests/test_config.py` | Skip the symlink-dedup test when symlink creation isn't permitted (Windows non-elevated). |
+| 5 | mu2edaq-snapshot-viewer | `tests/test_server_web.py`, `tests/test_admin_cli.py` | Build test config via `yaml.safe_dump` so Windows paths aren't misread as double-quoted-scalar escapes. |
 
 These are the two changes that are unambiguously correct on every platform. The
 runtime-Unix items (SSH/Kerberos/`ps`/`kill`, the bash harness, C++ builds) are
@@ -159,3 +164,4 @@ Filed on `Mu2e/mu2edaq-main`, each titled with the submodule:
 | [#11](https://github.com/Mu2e/mu2edaq-main/issues/11) | SSH-tunnel + Kerberos tooling is Unix-only (5 packages) | Open — design decision |
 | [#12](https://github.com/Mu2e/mu2edaq-main/issues/12) | desktop / controlroom-setup: Linux `.desktop` install + ssh ControlMaster fail on Windows | Open — product decision |
 | [#13](https://github.com/Mu2e/mu2edaq-main/issues/13) | downtime-logger logfile detector: open handle blocks rotation + inode detection on Windows | Open — design decision |
+| [#14](https://github.com/Mu2e/mu2edaq-main/issues/14) | bigredbox `SO_REUSEADDR` defeats single-instance port check on Windows | **Fixed** (`mu2edaq-bigredbox@d314369`) |

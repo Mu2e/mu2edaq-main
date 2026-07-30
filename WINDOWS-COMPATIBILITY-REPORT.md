@@ -168,6 +168,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-shifter-tools | `bootstrap.ps1` (venv setup). Kerberos/VNC/noVNC/login admin scripts are Unix-only (#11), not ported | first-ever `tests/` (5): open_tunnels import, read_config, parity/parse. **Fixed a real `import sys` bug** in `read_config.py` | 5 passed | `9cab9ad` |
 | mu2edaq-cluster-tools | `bootstrap.ps1`, `install.ps1` (per-user install → `%LOCALAPPDATA%` + `.cmd` launchers) | `tests/test_windows_compat.py` (6): ipconfig fallback, ping flags, parity/parse. **Fixed a real Windows gap**: `ssh_selector` had no `ipconfig` fallback → empty network auto-detect | 157 passed / 1 skipped | `fee22e5` |
 | mu2edaq-phone-notification-system | `bootstrap.ps1`, `start-`/`stop-mu2edaq-notify-server.ps1` (aws proxy/chain scripts are Linux deploy, not ported) | `tests/test_windows_scripts.py` (6): parity, parse, aws-not-ported, config path guard | 94 passed / 1 fail (pre-existing APNs) | `ba1e678` |
+| mu2edaq-controlroom-setup | `bootstrap.ps1`, `bin/start-`/`stop-controlroom.ps1` (server VNC scripts are Linux cluster, not ported) | `tests/test_windows_compat.py` (7). **Fixed `gio` crash** in crs-provision-desktop + 2 test fixes → cleared all 4 phase-1 failures (#12) | 48 passed / 1 skip / 1 xfail (was 38/4-fail) | `60bfffe` |
 
 ## Not verifiable on this host
 

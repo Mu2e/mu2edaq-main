@@ -178,6 +178,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-runlog-db | 5-script launch chain: `bootstrap-`/`start-`/`stop-mu2e-rundb-viewer.ps1` + standardized wrappers. **Prod uses waitress on Windows** (gunicorn is Unix-only); dev uses runserver | `tests/test_windows_scripts.py` (7): chain parity, parse, `manage.py check` | 7 passed + check clean | `cd41148` |
 | mu2edaq-discovery | `bootstrap.ps1`, `start-`/`stop-mu2edaq-discover-gui.ps1` (stop via CIM cmdline match) | `tests/test_windows_compat.py` (6): SO_REUSEPORT guard, multicast constants, parity/parse. UDP multicast Windows-safe (loopback test passes) | 29 passed (was 23) | `c8cc78a` |
 | mu2edaq-commandline-tools | `bootstrap.ps1`, `start-`/`stop-mu2edaq-commandline-tools.ps1` (full option/env parity). C++ build gated on cmake presence | `tests/test_windows_compat.py` (6): config candidate-list graceful, expanduser, parity/parse | 24 passed py (was 18) | `66e3e41` |
+| mu2edaq-heartbeatmonitor | `bootstrap_heartbeat_monitor.ps1`, `start-`/`stop-mu2edaq-heartbeatmonitor.ps1` (start backgrounds via Start-Process; daemon `os.fork` guarded). C++ cpp_sender not built | first `tests/` (6). **Fixed `/tmp` daemon defaults** → `tempfile.gettempdir()` (as #8) | 6 passed | `346d774` |
 
 ## Not verifiable on this host
 

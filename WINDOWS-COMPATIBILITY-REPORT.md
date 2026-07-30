@@ -182,6 +182,14 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-dashboard | `bootstrap_dashboard.ps1`, `start-`/`stop-mu2edaq-dashboard.ps1` (start backgrounds via Start-Process; daemon `os.fork` guarded). C++ sender not built | first `tests/` (6): import, defaults-not-/tmp, fork-guard, parity/parse. Source clean (defaults relative) | 6 passed | `42ccb9e` |
 | mu2edaq-controlcenter | `bootstrap.ps1`, `start-`/`stop-mu2edaq-controlcenter.ps1` (start mirrors the GPU/OpenGL probe + status-server wait + pings; stop finds by pid/cmdline) | first `tests/` (7): non-GUI import, parity/parse, aliases | 7 passed | `142399e` |
 | mu2edaq-dataformat-viewer | `bootstrap.ps1`, `start-`/`stop-mu2edaq-dataformat-viewer.ps1` (start backgrounds via Start-Process). C++ component not built | first `tests/` (8): config load, `__future__` 3.9-guard present, parity/parse | 8 passed | `aeeeec0` |
+| mu2edaq-controlroom | `bootstrap.ps1` only (krb5-aware: installs pyyaml, skips the no-Windows-wheel `krb5` with a message). NOVA-legacy Kerberos/VNC/ssh/CVMFS scripts are Unix-only (#11), not ported | `test_windows_compat.py` (5): daq_env_tools imports w/o Kerberos, krb5 is the blocked dep, Unix-scripts-not-ported | 7 passed | `bcee056` |
+
+**Phase 2 complete.** Every `mu2edaq-*` package with portable launch/bootstrap
+scripts now ships PowerShell ports; packages whose `.sh` are Linux-only by
+nature (operations DAQ ops, controlroom Kerberos/VNC) are documented, not
+fake-ported; every package has added Windows test coverage and a completed deep
+review. 13 source/robustness fixes landed across 17 submodule `windows-compat`
+branches. Issues: #7 #8 #10 #12 #14 fixed, #13 narrowed, #9 #11 open by design.
 
 ## Not verifiable on this host
 

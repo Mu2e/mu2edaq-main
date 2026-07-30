@@ -167,6 +167,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-snapshot-viewer | (5 launch/bootstrap `.ps1` already shipped; parse-verified) | `tests/test_windows_scripts.py` (parity + parse + capture) | 107 passed / 1 skipped | `25ba27a` |
 | mu2edaq-shifter-tools | `bootstrap.ps1` (venv setup). Kerberos/VNC/noVNC/login admin scripts are Unix-only (#11), not ported | first-ever `tests/` (5): open_tunnels import, read_config, parity/parse. **Fixed a real `import sys` bug** in `read_config.py` | 5 passed | `9cab9ad` |
 | mu2edaq-cluster-tools | `bootstrap.ps1`, `install.ps1` (per-user install → `%LOCALAPPDATA%` + `.cmd` launchers) | `tests/test_windows_compat.py` (6): ipconfig fallback, ping flags, parity/parse. **Fixed a real Windows gap**: `ssh_selector` had no `ipconfig` fallback → empty network auto-detect | 157 passed / 1 skipped | `fee22e5` |
+| mu2edaq-phone-notification-system | `bootstrap.ps1`, `start-`/`stop-mu2edaq-notify-server.ps1` (aws proxy/chain scripts are Linux deploy, not ported) | `tests/test_windows_scripts.py` (6): parity, parse, aws-not-ported, config path guard | 94 passed / 1 fail (pre-existing APNs) | `ba1e678` |
 
 ## Not verifiable on this host
 

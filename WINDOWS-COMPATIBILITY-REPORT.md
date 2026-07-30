@@ -172,6 +172,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-desktop | `bootstrap.ps1`, `start-`/`stop-mu2edaq-desktop.ps1` (bin/install-* are Linux XDG/AL9 installers, not ported) | `tests/test_windows_compat.py` (6). **Fixed same `gio` crash** in icons + 2 test skips → cleared all 4 phase-1 failures (**closes #12**) | 21 passed / 2 skip (was 13/4-fail) | `e4ae19f` |
 | mu2edaq-downtime-logger | `bootstrap.ps1`, `start-`/`stop-mu2edaq-downtime-logger.ps1` | `tests/test_windows_scripts.py` + new `test_..._copytruncate` (cross-platform rotation). **#13 narrowed**: `st_ino` works on Windows & copytruncate handled; only unlink-while-open rotation is POSIX-only (gated) | 67 passed / 1 skip (was 66/1-fail) | `20549a6` |
 | mu2edaq-fts | `bootstrap_fts.ps1`, `start-`/`stop-mu2edaq-fts.ps1` (start backgrounds via Start-Process since `--daemon` fork is Windows-guarded) | `tests/test_windows_compat.py` (5): parity, parse, daemon-guard. Source review clean (scp/xrdcp/hooks degrade gracefully) | 42 passed (was 37) | `6fd9886` |
+| mu2edaq-reverse-proxy | 5 scripts: `bootstrap.ps1`, `start-`/`stop-mu2edaq-proxy-{gui,server}.ps1` (stop matches by cmdline via CIM = `pgrep -f`) | `tests/test_windows_compat.py` (7): run_dir/socket cross-platform, parity/parse. `klist`/ssh runtime stays #11 | 236 passed (was 229) | `19de4a9` |
 
 ## Not verifiable on this host
 

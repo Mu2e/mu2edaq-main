@@ -175,6 +175,7 @@ submodule's `windows-compat` branch. Progress:
 | mu2edaq-reverse-proxy | 5 scripts: `bootstrap.ps1`, `start-`/`stop-mu2edaq-proxy-{gui,server}.ps1` (stop matches by cmdline via CIM = `pgrep -f`) | `tests/test_windows_compat.py` (7): run_dir/socket cross-platform, parity/parse. `klist`/ssh runtime stays #11 | 236 passed (was 229) | `19de4a9` |
 | mu2edaq-operations | **none** — 12 `.sh` are Linux DAQ ops (PCIe/DTC/IPMI/lm-sensors/otsdaq/pssh), no app launchers; ports would be non-functional | `tests/test_windows_compat.py` (5): temp reader degrades gracefully (psutil `sensors_temperatures` guard), clean `main()` error, no-launcher invariant | 155 passed (was 150) | `acf074e` |
 | mu2edaq-resource-manager | `bootstrap.ps1`, `start-`/`stop-mu2edaq-resource-manager.ps1` (RM_* env contract; start backgrounds via Start-Process). C++ build + `load_env.sh` are Linux, not ported | `tests/test_windows_compat.py` (5): parity, parse, cpp/env-not-ported. Server Windows-safe (uvicorn) | 30 passed (py; was 25) | `7f88f57` |
+| mu2edaq-runlog-db | 5-script launch chain: `bootstrap-`/`start-`/`stop-mu2e-rundb-viewer.ps1` + standardized wrappers. **Prod uses waitress on Windows** (gunicorn is Unix-only); dev uses runserver | `tests/test_windows_scripts.py` (7): chain parity, parse, `manage.py check` | 7 passed + check clean | `cd41148` |
 
 ## Not verifiable on this host
 

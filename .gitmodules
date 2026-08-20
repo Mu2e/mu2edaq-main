@@ -121,3 +121,6 @@
 [submodule "mu2edaq-config"]
 	path = mu2edaq-config
 	url = git@github.com:Mu2e/mu2edaq-config.git
+[submodule "mu2edaq-kerberos"]
+	path = mu2edaq-kerberos
+	url = git@github.com:Mu2e/mu2edaq-kerberos.git

@@ -124,3 +124,6 @@
 [submodule "mu2edaq-kerberos"]
 	path = mu2edaq-kerberos
 	url = git@github.com:Mu2e/mu2edaq-kerberos.git
+[submodule "mu2edaq-power-recovery"]
+	path = mu2edaq-power-recovery
+	url = git@github.com:Mu2e/mu2edaq-power-recovery.git

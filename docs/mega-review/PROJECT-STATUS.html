@@ -62,17 +62,17 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;backgroun
   </div>
   <div class="meta">
     <span>branch mu2e-sept-mega-review</span>
-    <span>updated 2026-09-30 &middot; wave 1b, 6 agents running</span>
+    <span>updated 2026-09-30 &middot; wave 1b, 8 agents running</span>
     <span>45 packages &middot; ~277 kLOC</span>
   </div>
 </header>
 
 <section>
   <div class="summary">
-    <div class="tile"><div class="n">2 / 45</div><div class="l">packages documented</div><div class="bar"><span style="width:4%"></span></div></div>
-    <div class="tile"><div class="n">22</div><div class="l">findings &middot; 1 S1 &middot; 6 S2 &middot; 11 S3 &middot; 4 S4</div></div>
-    <div class="tile"><div class="n">13</div><div class="l">man pages written or relocated</div></div>
-    <div class="tile"><div class="n">0 / 29</div><div class="l">issues filed &middot; all staged locally</div></div>
+    <div class="tile"><div class="n">3 / 45</div><div class="l">packages documented</div><div class="bar"><span style="width:7%"></span></div></div>
+    <div class="tile"><div class="n">37</div><div class="l">findings &middot; 1 S1 &middot; 13 S2 &middot; 18 S3 &middot; 5 S4</div></div>
+    <div class="tile"><div class="n">20</div><div class="l">man pages written or relocated</div></div>
+    <div class="tile"><div class="n">0 / 44</div><div class="l">issues filed &middot; all staged locally</div></div>
   </div>
   <p class="note">Issue filing is blocked by the session permission classifier. Every finding is staged
   paste-ready in its package's <code>ISSUES-PENDING.md</code> with a line-number-independent fingerprint,
@@ -91,6 +91,11 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;backgroun
       <tr><td><span class="chip part">S2</span></td><td class="mono">dashboard</td><td>No <code>ZMQ_SNDTIMEO</code> anywhere: <code>zmq_send</code> blocks indefinitely past the high-water mark, so a DAQ component embedding the sender stalls when the dashboard is down. A monitoring transport that can hang what it monitors.</td><td>agent</td></tr>
       <tr><td><span class="chip part">S2</span></td><td class="mono">dashboard</td><td><code>--config</code> defaults to a file that does not exist; the compiled-in fallbacks then disagree with the shipped config on web port and <code>counts_source</code>.</td><td>agent</td></tr>
       <tr><td><span class="chip part">S2</span></td><td class="mono">diskwatcher</td><td>An 8,815-line access log is committed at <code>config/mu2edaq-diskwatcher.log</code> &mdash; already tracked, so the <code>*.log</code> ignore rule cannot help. Ships to all 28 nodes and sits where operators read node state.</td><td>agent</td></tr>
+      <tr><td><span class="chip part">S2</span></td><td class="mono">fts</td><td><code>StrictHostKeyChecking=no</code> on the <strong>verifier's</strong> ssh (<code>verifier.py:57</code>). That call is the sole integrity gate before deletion: anything answering on the destination address returns an arbitrary digest, and the only local copy is then unlinked. Materially worse than the same flag on the transfer itself.</td><td><span class="chip done">read it myself</span></td></tr>
+      <tr><td><span class="chip part">S2</span></td><td class="mono">fts</td><td><code>POST /file/&lt;id&gt;/mark-ready</code> sets <code>ready_for_deletion=True</code> together with <code>checksum_verified=False</code> &mdash; a route that authorizes deletion while recording that verification never happened. In <code>immediate</code> mode (every shipped config) the cleaner unlinks one interval later.</td><td><span class="chip done">read the route myself</span></td></tr>
+      <tr><td><span class="chip part">S2</span></td><td class="mono">fts</td><td><code>files.filepath</code> is UNIQUE and the poller skips tracked non-<code>COMPLETED</code> rows, including <code>DELETED</code>. A file reappearing at a previously-shipped path is never transferred and never reported &mdash; and the stale <code>DELETED</code> row still tells file-reaper that path is deletable, so the reaper may remove the new, untransferred file.</td><td>agent</td></tr>
+      <tr><td><span class="chip part">S2</span></td><td class="mono">fts</td><td><code>/config</code> renders the whole <code>AppConfig</code> via <code>dataclasses.asdict</code>, including <code>saml.secret_key</code> and the inline <code>sp_key</code>.</td><td>agent</td></tr>
+      <tr><td><span class="chip todo">S3</span></td><td class="mono">fts</td><td>Destination-full is unhandled: <code>ENOSPC</code> becomes a generic transfer error, burns its retries, goes terminal. Nothing then reaches <code>COMPLETED</code>, so nothing becomes deletable, so the <em>source</em> datadisk fills too.</td><td>agent</td></tr>
       <tr><td><span class="chip todo">S3</span></td><td class="mono">diskwatcher</td><td><strong>Real bug:</strong> <code>ssh.options</code> given as bare <code>Key=Value</code> is spliced into argv without <code>-o</code>, so the option becomes the ssh destination. Every doc and the shipped config show exactly that form. Survived because the test only covers the form that already has <code>-o</code>.</td><td>agent</td></tr>
       <tr><td><span class="chip todo">S3</span></td><td class="mono">diskwatcher</td><td>The node list is a <strong>fourth</strong> topology copy: 14 trk / 8 calo vs 18 / 14 in operations and power-recovery, and 14 / 11 in power-sequence.yaml. A strict subset &mdash; 19 MC-2 hosts have no config. Deliberate scoping or stale is not determinable from the repo.</td><td>agent, with evidence</td></tr>
       <tr><td><span class="chip todo">S3</span></td><td class="mono">both</td><td>Neither package has CI, despite 314 test functions in diskwatcher and none at all in dashboard. Several diskwatcher tests exist to prevent specific recurrences.</td><td>agent</td></tr>
@@ -110,6 +115,10 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;backgroun
       <tr><td>Is the diskwatcher SSH path injectable from config?</td><td>The scanned <code>path</code> is safe &mdash; <code>shlex.quote</code> per element and the probe takes it as <code>argv[1]</code>. Residual risk needs YAML write access, which already equals start-script privilege.</td></tr>
       <tr><td>Have the 28 per-node configs drifted from their template?</td><td><strong>No drift.</strong> All 27 re-rendered and compared byte-for-byte; zero differences. The generator is the source of truth in practice.</td></tr>
       <tr><td>Do the C++ and Python dashboard senders emit the same wire schema?</td><td><strong>Yes</strong>, key-for-key and in order. The divergence is in CLI surface: the C++ tool has no <code>--config</code>, so it ignores site YAML entirely.</td></tr>
+      <tr><td>Which port does FTS actually bind &mdash; 5003, 8080 or 5004?</td><td><strong>5003.</strong> <code>start-mu2edaq-fts.sh:16</code> exports <code>CRS_PORT_HTTP=5003</code> and <code>mu2edaq_fts.py:169</code> applies it <em>after</em> config load, unconditionally. The 8080 in four config files is dead on every shipped path; it is live only for a bare <code>python mu2edaq_fts.py</code>, which is the Docker entrypoint. No live collision with resource-manager, so S3 not S2.</td></tr>
+      <tr><td>Does FTS verify transfers by checksum or just size?</td><td><strong>Both, at different stages.</strong> The transfer step checks only the subprocess exit status &mdash; its "transfer_bytes" is <code>getsize(local)</code>, so it can never disagree with the source. A genuine end-to-end digest comparison happens later, before deletion. With <code>checksum.enabled: false</code> the service fails <em>safe</em>: it transfers forever and never deletes.</td></tr>
+      <tr><td>Can the FTS cleaner delete before the verifier confirms?</td><td>The cleaner proper cannot. <strong>Two other paths can</strong>: the manual <code>mark-ready</code> route, and <code>compression.keep_original: false</code>, which unlinks the source immediately after the copy returns rc=0.</td></tr>
+      <tr><td>Are <code>start_fts.sh</code>/<code>stop_fts.sh</code> duplicate files?</td><td><strong>No</strong> &mdash; git symlinks (mode 120000). The agent initially wrote them up as byte-identical copies and corrected itself across all five documents after checking <code>git ls-files -s</code>. The only real duplication is <code>config.example.yaml</code>, which exists twice as independent regular files.</td></tr>
     </tbody>
   </table></div>
 </section>
@@ -121,7 +130,7 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;backgroun
     <tbody>
       <tr><td>0 Setup</td><td>branches in 45 repos + docs repo, mkdocs venv, CONTRACT.md, quarantine record, check-docs.yml</td><td><span class="chip done">done</span></td><td>44/45 submodules branched; kerberos-standards is a worktree and holds its own branch</td></tr>
       <tr><td>1a Shifter docs</td><td>fix inconsistencies in the published operator site</td><td><span class="chip done">done</span></td><td>commit efc6ab6; strict build clean; 3 contradictions flagged not guessed</td></tr>
-      <tr><td>1b Packages</td><td>per-package review, manifest, docs, man pages &times; 45</td><td><span class="chip prog">2 of 45</span></td><td>done: diskwatcher, dashboard. running: discovery, file-reaper, fts, downtime-logger, phone-notification, bigredbox+heartbeatmonitor</td></tr>
+      <tr><td>1b Packages</td><td>per-package review, manifest, docs, man pages &times; 45</td><td><span class="chip prog">3 of 45</span></td><td>done: diskwatcher, dashboard, fts. running: discovery, file-reaper, downtime-logger, phone-notification, bigredbox+heartbeatmonitor, control-room &times;4, network-arbitration &times;4</td></tr>
       <tr><td>2 Cross-cutting</td><td>port table, topology triplication, inventory duplication &mdash; filed once each</td><td><span class="chip todo">pending</span></td><td>needs all 45 manifests first</td></tr>
       <tr><td>3 Aggregation</td><td>build-expert-corpus.py &rarr; daq-expert site + daq-expert-markdown</td><td><span class="chip todo">pending</span></td><td>a diagrams/ tree of unknown origin overlaps this; reconcile first</td></tr>
       <tr><td>4 Verify &amp; ship</td><td>strict builds, man lint, coverage cross-check, gitlink bump, PRs</td><td><span class="chip todo">pending</span></td><td>submodules push first, superproject gitlink last</td></tr>
@@ -137,9 +146,9 @@ code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;backgroun
     <tbody>
       <tr><td>substrate</td><td class="mono">discovery, config</td><td>A</td><td><span class="chip prog">discovery running</span></td></tr>
       <tr><td>monitoring</td><td class="mono">dashboard, diskwatcher, heartbeatmonitor, bigredbox, downtime-logger, phone-notification-system, snapshot-viewer, trigger-scalers</td><td>A</td><td><span class="chip prog">2 done, 4 running</span></td></tr>
-      <tr><td>data-movement</td><td class="mono">fts, file-reaper</td><td>A</td><td><span class="chip prog">2 running</span></td></tr>
-      <tr><td>control-room</td><td class="mono">controlcenter, desktop, controlroom-setup, controlroom</td><td>A</td><td><span class="chip todo">pending</span></td></tr>
-      <tr><td>network-arbitration</td><td class="mono">reverse-proxy, resource-manager, cluster-tools, commandline-tools</td><td>A</td><td><span class="chip todo">pending</span></td></tr>
+      <tr><td>data-movement</td><td class="mono">fts, file-reaper</td><td>A</td><td><span class="chip prog">fts done, file-reaper running</span></td></tr>
+      <tr><td>control-room</td><td class="mono">controlcenter, desktop, controlroom-setup, controlroom</td><td>A</td><td><span class="chip prog">running</span></td></tr>
+      <tr><td>network-arbitration</td><td class="mono">reverse-proxy, resource-manager, cluster-tools, commandline-tools</td><td>A</td><td><span class="chip prog">running</span></td></tr>
       <tr><td>identity</td><td class="mono">kerberos (+standards worktree), Bootstrap</td><td>A</td><td><span class="chip todo">pending</span></td></tr>
       <tr><td>operations</td><td class="mono">operations, power-recovery, shifter-tools, CFOControl, runlog-db, dataformat-viewer</td><td>A</td><td><span class="chip todo">pending</span></td></tr>
       <tr><td>artdaq-data-path</td><td class="mono">artdaq-core-mu2e, artdaq-mu2e, mu2e-pcie-utils, mu2ebintools</td><td>B</td><td><span class="chip todo">pending</span></td></tr>

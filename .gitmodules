@@ -127,3 +127,6 @@
 [submodule "mu2edaq-power-recovery"]
 	path = mu2edaq-power-recovery
 	url = git@github.com:Mu2e/mu2edaq-power-recovery.git
+[submodule "mu2edaq-batch-queues"]
+	path = mu2edaq-batch-queues
+	url = git@github.com:Mu2e/mu2edaq-batch-queues.git

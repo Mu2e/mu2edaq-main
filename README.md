@@ -43,6 +43,7 @@ Unless specified otherwise.
 | mu2e-pcie-utils | [Mu2e/mu2e-pcie-utils](https://github.com/Mu2e/mu2e-pcie-utils) |
 | mu2e-tdaq-suite | [Mu2e/mu2e-tdaq-suite](https://github.com/Mu2e/mu2e-tdaq-suite) |
 | mu2ebintools | [Mu2e/mu2ebintools](https://github.com/Mu2e/mu2ebintools) |
+| mu2edaq-batch-queues | [Mu2e/mu2edaq-batch-queues](https://github.com/Mu2e/mu2edaq-batch-queues) |
 | mu2edaq-bigredbox | [Mu2e/mu2edaq-bigredbox](https://github.com/Mu2e/mu2edaq-bigredbox) |
 | mu2edaq-CFOControl | [Mu2e/mu2edaq-CFOControl](https://github.com/Mu2e/mu2edaq-CFOControl) |
 | mu2edaq-cluster-tools | [Mu2e/mu2edaq-cluster-tools](https://github.com/Mu2e/mu2edaq-cluster-tools) |
